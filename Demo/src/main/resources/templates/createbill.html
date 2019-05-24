@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+<!-- Required meta tags-->
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="au theme template">
+<meta name="author" content="HienTran-DCTHIEN edit">
+<meta name="keywords" content="au theme create-bill">
+
+
+<style type="text/css">
+body {
+	padding-top: 0px;
+}
+
+.form-control {
+	margin-bottom: 10px;
+}
+
+.login-screen-bg {
+	background-color: #EFEFEF;
+}
+</style>
+
+
+
+<meta charset="UTF-8">
+<title>Template</title>
+
+<!-- Fontfaces CSS-->
+<link th:href="@{/css/font-face.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/font-awesome-4.7/css/font-awesome.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/font-awesome-5/css/fontawesome-all.min.css}"
+	rel="stylesheet" media="all">
+<link
+	th:href="@{/vendor/mdi-font/css/material-design-iconic-font.min.css}"
+	rel="stylesheet" media="all">
+
+<!-- Bootstrap CSS-->
+<link th:href="@{/vendor/bootstrap-4.1/bootstrap.min.css}"
+	rel="stylesheet" media="all">
+
+<!-- Vendor CSS-->
+<link th:href="@{/vendor/animsition/animsition.min.css}"
+	rel="stylesheet" media="all">
+<link
+	th:href="@{/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/wow/animate.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/css-hamburgers/hamburgers.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/slick/slick.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/select2/select2.min.css}" rel="stylesheet"
+	media="all">
+<link th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}"
+	rel="stylesheet" media="all">
+<link  th:href="@{/vendor/datatables/css/dataTables.bootstrap4.min.css}" rel="stylesheet" media="all">
+<!-- Main CSS-->
+<link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+<link th:href="@{/css/hover-min.css}" rel="stylesheet" media="all">
+ <!-- Bootstrap JS -->
+    <script th:src="@{/vendor/bootstrap-4.1/popper.min.js}" type="text/javascript"></script>
+    <script th:src="@{/vendor/bootstrap-4.1/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/vendor/datatables/js/dataTables.bootstrap4.min.js}" type="text/javascript"></script>
+
+
+<!-- JQuery JS -->
+<script th:src="@{/vendor/jquery-ui.min.js}"></script>
+<script th:src="@{/vendor/jquery-3.4.0.min.js}"></script>
+ <!-- p5 JS -->
+    <script th:src="@{/vendor/p5/p5.min.js}" type="text/javascript"></script>
+<script
+	th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js}"></script>
+<script
+	th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}"></script>
+<script
+	th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+
+<link rel="stylesheet"
+	th:href="@{//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css}">
+
+<script th:src="@{https://code.jquery.com/jquery-1.12.4.js}"></script>
+<script th:src="@{https://code.jquery.com/ui/1.12.1/jquery-ui.js}"></script>
+
+<script>
+	$(function() {
+
+		$("#nameProduct").autocomplete({
+			source : function(request, response) {
+				$.ajax({
+					url : "http://localhost:8080/searchProduct",
+					dataType : "json",
+					data : {
+						nameProduct : request.term
+					},
+					success : function(data) {
+
+						for (var i = 0; i < data.length; i++) {
+							$("#idProduct").val(data[i].idProduct);
+							$("#price").val(data[i].price);
+						}
+						return data;
+					}
+				});
+
+			},
+			minLength : 2
+		});
+
+	});
+</script>
+
+<script>
+	$(function() {
+		var spinner = $("#spinner").spinner();
+
+		$("#disable").on("click", function() {
+			if (spinner.spinner("option", "disabled")) {
+				spinner.spinner("enable");
+			} else {
+				spinner.spinner("disable");
+			}
+		});
+		$("#destroy").on("click", function() {
+			if (spinner.spinner("instance")) {
+				spinner.spinner("destroy");
+			} else {
+				spinner.spinner();
+			}
+		});
+		$("#getvalue").on("click", function() {
+			alert(spinner.spinner("value"));
+		});
+		$("#setvalue").on("click", function() {
+			spinner.spinner("value", 5);
+		});
+
+		$("button").button();
+	});
+</script>
+
+
+<!-- Title Page-->
+<title>Create bill</title>
+
+
+</head>
+
+<body class="animsition1">
+	<div class="page-wrapper">
+
+		<!-- MENU SIDEBAR-->
+		<aside class="menu-frame">
+			<iframe th:src="@{/sale}" frameborder="0" height="100%"></iframe>
+
+		</aside>
+		<!-- END MENU SIDEBAR-->
+
+		<!-- CONTAINER -->
+		<div class="page-container">
+
+
+			<!-- end HEADER DESKTOP-->
+
+			<!-- CONTAINER DESKTOP-->
+			<div class="title-container">Record new customer order</div>
+			<div class=" parent-container">
+				<div class="container row pl-3 pr-3 m-2">
+					<div class="col-sm-7 child-left-container">
+						<div class="content-left-container">
+
+							<legend style="font-size: 17px">Add new item to the cart</legend>
+
+							<form th:action="@{/createInvoice}" th:method="post"
+								th:object="${bill}">
+								<div class="form-group">
+
+									<!-- Product name -->
+									<div class="row form-field">
+										<small class="col-sm-4" style="line-height: 57px;">Product
+											name</small> <input name="nameProduct" class="form-control col-sm-8"
+											type="text" id="nameProduct">
+									</div>
+									<!-- Quantity -->
+									<div class="row form-field">
+										<small class="col-sm-4" style="line-height: 57px;">Quantity</small>
+										<input name="quantity" class="form-control col-sm-8"
+											type="number" id="quantity">
+									</div>
+									<!-- Product ID
+									<div class="row form-field">
+										<small class="col-sm-4" style="line-height: 57px;">Product
+											ID</small> <input name="idProduct" class="col-sm-8"
+											style="line-height: 57px;" id="idProduct" >
+
+									</div> -->
+									<!-- Price per item -->
+									<div class="row form-field">
+										<small class="col-sm-4" style="line-height: 57px;">Price
+											</small> <input name="price" class="col-sm-8"
+											style="line-height: 57px;" id="price" >
+									</div>
+									<!-- TOTAL PRICE 
+                                <div class="row form-field">
+                                    <small class="col-sm-4" style="line-height: 57px; font-weight: 600; font-size: 19px">Total
+                                        price
+                                    </small>
+                                    <input name="total"  class="col-sm-8" style="line-height: 57px; font-weight: 600; font-size: 19px" id="total"
+                                   >
+                               
+                                </div>-->
+									<!-- Button Add to the cart -->
+									<div class="row form-field">
+										<div class="col-sm-4"></div>
+										<input type="submit" value="Add to cart"
+											class="col-sm-8 sims-btn-add-to-cart">
+									</div>
+
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="col-sm-5 child-right-container">
+						<div class="content-right-container">
+
+							<center>
+								<small style="font-size: 17px;">Items in cart</small>
+							</center>
+							<!-- TOTAL PRICE -->
+							<div class="row form-field">
+								<small class="col-sm-6"
+									style="line-height: 57px; font-weight: 400; font-size: 19px; text-align: left;">Total
+									price </small> <small name="price-per-item" class="col-sm-6"
+									style="line-height: 57px; font-weight: 400; font-size: 19px; text-align: right" th:text="${totalBill}">
+									 </small>
+							</div>
+							<!-- Button DONE! Proceed to checkout -->
+							<div class="row form-field">
+								<div class="col-sm-2"></div>
+							 <a th:href="@{/saveInvoice}">	<input name="done" type="button"
+									value="DONE! Proceed to checkout"
+									class="col-sm-10 sims-btn-add-to-cart" ></a>
+							</div>
+							<!-- <button>DONE. Proceed to checkout</button> -->
+							<form th:action="@{/saveInvoice}" method="post" class="form"
+								role="form" id="search-form">
+								<table class="table table-condensed sims-bill-table">
+
+									<thead>
+										<tr>
+											<th>Product's name</th>
+											<th>Qty.</th>
+											<th>Price</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="product : ${listProduct}">
+											<td><span th:text="${product.nameProduct}"> </span></td>
+											<td><span th:text="${product.quantity}"> </span></td>
+											<td><span th:text="${product.total}"> </span></td>
+											<td><button type="button" class="btn">
+													<i class="fa fa-times" aria-hidden="true"></i>
+												</button></td>
+										</tr>
+
+									</tbody>
+								</table>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- END CONTAINER -->
+
+
+	</div>
+
+</body>
+
+</html>

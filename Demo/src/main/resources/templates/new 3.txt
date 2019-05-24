@@ -1,0 +1,46 @@
+
+       // $.ajax({
+		//	type : "GET",
+		//	url : "http://localhost:8080/getInvoices?idInvoice="+idInvoice,
+		//	dataType : 'json',
+
+		//	success : function(ld) {
+			//	 $('#detail2-invoice-data-table tbody').html('');
+			//				 for(var i=0;i<ld.length;i++){
+			//					 var  name = '<tr><td class="dt-left" width="50%" ><span >'+ld[i].price+
+				//			     '</span></td><td class="dt-center" width="15%" ><span > '+ld[i].price
+				//			     +'</span></td><td class="dt-right" width="20%" ><span> '+ld[i].price
+				//			     +'</span></td> <td class="dt-right" width="15%"></td></tr>';
+				//			     $('#detail2-invoice-data-table tbody').append(name);
+							    
+							     
+	    // }
+  //	}
+   // });
+   $('#add').click(function(){
+		var record = '<tr>';
+		record+='<td contentEditable="true" id="data1"></td>';
+		record+='<td contentEditable="true" id="data2"></td>';
+		record+='<td><button type="button" class="btn"><i class="fa fa-times" aria-hidden="true"></i></button></td>';
+		record+='</tr>';
+		$('#content tbody').prepend(record);
+});
+</script>
+
+ <span id="nameProduct"></span>  
+ 
+   
+    $("#list-product-receipt-data-table").DataTable({
+            searching: false,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            columnDefs: [
+                {className: "dt-left", target: [1]},
+                {className: "dt-center", target: [2]}
+            ],
+            columns: [
+                { data: "name"},
+                { data: "qty"},
+            ],
+        })

@@ -1,0 +1,275 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>ReportException</title>
+
+<!-- Fontfaces CSS-->
+<link th:href="@{/css/font-face.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/font-awesome-4.7/css/font-awesome.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/font-awesome-5/css/fontawesome-all.min.css}"
+	rel="stylesheet" media="all">
+<link
+	th:href="@{/vendor/mdi-font/css/material-design-iconic-font.min.css}"
+	rel="stylesheet" media="all">
+
+
+<!-- Bootstrap CSS-->
+<link th:href="@{/vendor/bootstrap-4.1/bootstrap.min.css}"
+	rel="stylesheet" media="all">
+
+
+<!-- Vendor CSS-->
+<link th:href="@{/vendor/animsition/animsition.min.css}"
+	rel="stylesheet" media="all">
+<link
+	th:href="@{/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/wow/animate.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/css-hamburgers/hamburgers.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/slick/slick.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/select2/select2.min.css}" rel="stylesheet"
+	media="all">
+<link th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}"
+	rel="stylesheet" media="all">
+
+
+<!-- Main CSS-->
+<link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+
+<link th:href="@{//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css}" rel="stylesheet" media="all">
+
+<!-- Bootstrap JS -->
+<script th:src="@{/vendor/bootstrap-4.1/bootstrap.min.js}"></script>
+<script th:src="@{/vendor/bootstrap-4.1/popper.min.js}"></script>
+
+
+
+<link rel="stylesheet"
+	th:href="@{//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css}">
+  <!-- JQuery JS -->
+    <script th:src="@{/vendor/jquery-3.4.0.min.js}" type="text/javascript"></script>
+    <script th:src="@{/vendor/jquery-ui.min.js}" type="text/javascript"></script>
+
+ <!-- Bootstrap JS -->
+    <script th:src="@{/vendor/bootstrap-4.1/popper.min.js}" type="text/javascript"></script>
+    <script th:src="@{/vendor/bootstrap-4.1/bootstrap.min.js}" type="text/javascript"></script>
+     <script th:src="@{//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js}" type="text/javascript"></script>
+    
+   
+    <style>
+    .table-editable {
+  position: relative;
+  
+  .fa {
+    font-size: 20px;
+  }
+}
+.table-remove {
+  color: #700;
+  cursor: pointer;
+  
+  &:hover {
+    color: #f00;
+  }
+}
+.table-add {
+  color: #070;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 0;
+  
+  &:hover {
+    color: #0b0;
+  }
+}
+    </style>
+<script>
+	//$(document).ready(
+		//	function() {
+
+			//	$.ajax({
+				//	type : "GET",
+				//	contentType : "application/json",
+				//	url : "http://localhost:8080/getRole",
+
+				//	dataType : 'json',
+
+				//	success : function(result) {
+
+				//		$.each(result, function(i, user) {
+					//		console.log(user.name);
+					//		var customer = "<option value="+user.name+" name=\"receiver\" id=\"receiver\">"
+						//			+ user.name + "</option>";
+						//	$("#exceptionsSe").append(customer);
+					//	});
+					//}
+				//});
+
+			//});
+</script>
+<script>
+	$(function() {
+		$("#inputNameproduct").autocomplete({
+			source : function(request, response) {
+				$.ajax({
+					url : "http://localhost:8080/searchProduct2",
+					dataType : "json",
+					data : {
+						inputNameproduct : request.term
+					},
+					success : function(data) {
+
+						console.log(data);
+						response(data);
+						return data;
+					}
+				});
+
+			}
+		});
+	});
+</script>
+<script>
+$('.table-add').click(function () {
+	var $TABLE = $('#content');
+	  var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
+	  $TABLE.find('table').append($clone);
+	});
+
+	$('.table-remove').click(function () {
+	  $(this).parents('tr').detach();
+	});
+
+</script>
+
+
+</head>
+<body class="animsition1">
+	<div class="page-wrapper">
+
+
+		<!-- MENU SIDEBAR-->
+		<aside class="menu-frame">
+			<iframe th:src="@{/sale}" frameborder="0" height="100%"></iframe>
+		</aside>
+		<!-- END MENU SIDEBAR-->
+
+		<!-- CONTAINER -->
+
+		<div class="page-container">
+			<div class="title-container">Create report</div>
+			<div class="parent-container">
+
+				<div class="container pl-4 pr-4">
+					<div class="report-cols">
+						<div class="col1">
+							<div class="report-exception">
+								<div class="form-group">
+									<form th:action="@{/createFeedback}" method="post" class="form"
+										role="form" th:object="${feedback}">
+
+										<!-- Title report -->
+										<div class="row form-field">
+											<small class="col-sm-4" style="line-height: 57px;">Title
+												report</small> <input type="text" name="reportType" id="reportType"
+												class="form-control col-sm-8" list="report-kind-list">
+										<!-- 	<datalist id="reportType">
+												<option value="Report selling goods"></option>
+												<option value="Report profit and lost"></option>
+												<option value="Report customer complaints"></option>
+												<option value="Report sales overview"></option>
+												<option value="Report defective products"></option>
+											</datalist>-->
+										</div>
+										<!-- Report creator -->
+										<div class="row form-field">
+											<small class="col-sm-4" style="line-height: 57px;">Report
+												creator</small> 
+											<small class="col-sm-8" id="creator" name="creator"
+												style="line-height: 57px; font-size: 24px; font-weight: 400;"
+												sec:authentication="name"> </small>
+										</div>
+										<!-- Date report -->
+										<div class="row form-field">
+											<small class="col-sm-4" style="line-height: 57px;">Date
+												report</small> 
+												<input type="date" name="date" id="date"
+												class="form-control col-sm-8 glyphicon glyphicon-calendar">
+										</div>
+										<!-- Reveiver -->
+										<div class="row form-field">
+											<small class="col-sm-4" style="line-height: 57px;">Receiver</small>
+											<!-- <select id="exceptionsSe" class="form-control col-sm-8" name="exceptionsSe">
+
+											</select>-->
+											 <input name="exceptionsSe" class="form-control col-sm-8" type="text"
+                                                       list="categories" id="exceptionsSe">
+                                                <datalist id="categories" >
+                                                    <option th:each="user : ${listU}" th:value="${user.name}" th:text="${user.role.name}"></option>
+                                                  
+                                                </datalist>
+										</div>
+
+
+
+
+										<table class="table table-condensed sims-bill-table table-editable" id="content">
+											<thead>
+												<tr>
+													<th>Product's name</th>
+													<th>Note</th>
+													<th>Remove
+													</th>
+													<th><button type="button" class="btn table-add" name="add" id="add">
+															<i class="fa fa-plus" aria-hidden="true" 
+																></i>
+														</button></th>
+												</tr>
+											</thead>
+
+											<tbody >
+												<tr>
+													<td contentEditable="true">
+													</td>
+													<td contentEditable="true"></td>
+													<td>
+														<button type="button" class="btn table-remove">
+															<i class="fa fa-times" aria-hidden="true"></i>
+														</button>
+														
+													</td>
+													<td></td>
+												</tr>
+
+											</tbody>
+										</table>
+
+										<hr>
+
+
+
+										<!-- Button Create quick report -->
+										<div class="row form-field">
+											<div class="col-sm-4"></div>
+											<input name="quick-report" type="submit"
+												value="Create quick report"
+												class="col-sm-8 sims-btn-add-to-cart" id="noID">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

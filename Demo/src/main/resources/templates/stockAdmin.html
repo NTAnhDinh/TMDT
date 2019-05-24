@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Stock-Admin</title>
+<!-- Fontfaces CSS-->
+<link th:href="@{/css/font-face.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/font-awesome-4.7/css/font-awesome.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/font-awesome-5/css/fontawesome-all.min.css}"
+	rel="stylesheet" media="all">
+<link
+	th:href="@{/vendor/mdi-font/css/material-design-iconic-font.min.css}"
+	rel="stylesheet" media="all">
+
+<!-- Bootstrap CSS-->
+<link th:href="@{/vendor/bootstrap-4.1/bootstrap.min.css}"
+	rel="stylesheet" media="all">
+
+<!-- Vendor CSS-->
+<link th:href="@{/vendor/animsition/animsition.min.css}"
+	rel="stylesheet" media="all">
+<link
+	th:href="@{/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/wow/animate.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/css-hamburgers/hamburgers.min.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/slick/slick.css}" rel="stylesheet" media="all">
+<link th:href="@{/vendor/select2/select2.min.css}" rel="stylesheet"
+	media="all">
+<link th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}"
+	rel="stylesheet" media="all">
+<link th:href="@{/vendor/datatables/css/dataTables.bootstrap4.min.css}"
+	rel="stylesheet" media="all">
+
+<!-- Main CSS-->
+<link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+<link th:href="@{/css/hover-min.css}" rel="stylesheet" media="all">
+<!-- JQuery JS -->
+<script th:src="@{/vendor/jquery-ui.min.js}" type="text/javascript"></script>
+<script th:src="@{/vendor/jquery-3.4.0.min.js}" type="text/javascript"></script>
+<script th:src="@{/vendor/datatables/js/jquery.dataTables.min.js}"
+	type="text/javascript"></script>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/vendor/bootstrap-4.1/popper.min.js}"
+	type="text/javascript"></script>
+<script th:src="@{/vendor/bootstrap-4.1/bootstrap.min.js}"
+	type="text/javascript"></script>
+<script th:src="@{/vendor/datatables/js/dataTables.bootstrap4.min.js}"
+	type="text/javascript"></script>
+
+
+
+<!-- p5 JS -->
+<script th:src="@{/vendor/p5/p5.min.js}" type="text/javascript"></script>
+<style type="text/css">
+th {
+	font-weight: normal !important;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+	font-size: 13px !important;
+}
+
+.page-item.active .page-link {
+	color: #19aa81 !important;
+	border: 0.5px solid #19aa81 !important;
+	background-color: #fff !important;
+	font-size: 13px;
+}
+
+.page-link {
+	color: #19aa81;
+	font-size: 13px;
+}
+
+.page-link:hover {
+	color: #19aa81;
+}
+
+.table td {
+	font-size: 14px;
+}
+</style>
+<script>
+
+
+$('#search1').on('click', function(evt) {
+	$.ajax({
+		type : "POST",
+		url : "http://localhost:8080//searchProduct2?idInvoice="+idInvoice,
+		dataType : 'json',
+
+		success : function(ld) {
+			for()
+			}
+	})
+  })
+
+</script>
+
+</head>
+<body class="animsition1">
+	<div class="page-wrapper">
+
+
+		<!-- MENU SIDEBAR-->
+		<aside class="menu-frame">
+			<iframe th:src="@{/sale}" frameborder="0" height="100%"></iframe>
+		</aside>
+		<!-- END MENU SIDEBAR-->
+
+
+		<!-- CONTAINER -->
+
+		<div class="page-container">
+			<ul class="nav dct-nav-tabs" role="tablist" style="">
+				<li class="nav-item hvr-bob"><a class="nav-link  active"
+					data-toggle="tab" href="#st1">
+						<div class="sub-title-container">Available Stock</div>
+				</a></li>
+				<li class="nav-item hvr-bob"><a class="nav-link "
+					data-toggle="tab" href="#st2">
+						<div class="sub-title-container">Add New Stock</div>
+				</a></li>
+				<li class="nav-item hvr-bob"><a class="nav-link"
+					data-toggle="tab" href="#st3">
+						<div class="sub-title-container">Add New Category</div>
+				</a></li>
+
+			</ul>
+			<div class="parent-container">
+				<div class="container">
+					<div class="dct-tab-content">
+						<div class="tab-content">
+
+							<!-- Available Stock -->
+							<div class="tab-pane container active" id="st1">
+								<div class="form-group">
+									<fieldset>
+										<form class="form-group">
+										
+										<div class="row container">
+											<div class="col-sm-6"></div>
+											<div class="col-sm-6 row form-field input-group-btn">
+												<input class="col-sm-11 form-control dt-right " type="text"
+													name="searchByKey">
+												<button class="col-sm-1 " id="search1">
+													<i class="fa fa-search"></i>
+												</button>
+											</div>
+										</div>
+										
+											
+											<div class="table-responsive col-sm-12">
+												<table id="stocks-data-table" class="table table-borderless"
+													width="100%" cellspacing="0">
+													<thead>
+														<tr>
+															<th style="width: 10%">Category</th>
+															<th style="width: 30%">Product</th>
+															<th style="width: 20%">Supplier</th>
+															<th style="width: 10%">Price</th>
+															<th style="width: 10%">Action</th>
+														</tr>
+													</thead>
+													<tbody>
+
+														<tr th:each="product : ${listProducts}">
+															<td th:text="${product.cateProduct.name}"></td>
+															<td th:text="${product.nameProduct}"></td>
+															<td th:text="${product.supplier}"></td>
+															<td th:text="${product.price}"></td>
+															<td><button type="button"
+																	th:onclick="editProduct([[${product.idProduct}]]);">
+																	<i class="fa fa-edit hvr-bob" style="color: #19aa81;"></i>
+																</button></td>
+
+														</tr>
+
+
+													</tbody>
+												</table>
+							<div class="row" >
+												<ul class="pagination">
+			<li
+				th:class="${currentIndex == 1}? 'page-item disabled' : 'page-item'">
+				<a class="page-link" th:href="@{|@{http:/localhost:8080/getListProduct?p=}${currentIndex - 1}|}">First</a>
+			</li>
+			<li
+				th:class="${currentIndex == 1}? 'page-item disabled': 'page-item' ">
+				<a class="page-link" aria-label="Previous"
+				th:href="@{|@{http:/localhost:8080/getListProduct?p=}${currentIndex - 1}|}"
+				title='Go to previous page'><span aria-hidden="true">«</span>
+					<span class="sr-only">Previous</span></a>
+			</li>
+			<li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+				th:class="${item == currentIndex ? 'page-item active' :'page-item' }">
+				<a class="page-link" th:href="@{|@{http:/localhost:8080/getListProduct?p=}${item}|}"> <span
+					th:text='${item}'>1</span>
+			</a>
+			</li>
+			<li
+				th:class="${currentIndex == totalPage}? 'page-item disabled': 'page-item'">
+				<a class="page-link" aria-label="Next"
+				th:href="@{|${http:/localhost:8080/getListProduct?p=}${currentIndex + 1}|}" title='Go to next page'><span
+					aria-hidden="true">»</span> <span class="sr-only">Next</span></a>
+			</li>
+			<li
+				th:class="${currentIndex == totalPage}? 'page-item disabled':'page-item'">
+				<a class="page-link" th:href="@{|${http:/localhost:8080/getListProduct?p=}${totalPage}|}">Last</a>
+			</li>
+		</ul>
+							</div>
+												<!-- Modal edit price of product -->
+												<div class="modal modal-default fade in" id="edit">
+													<div class="modal-dialog">
+
+														<div class="modal-content">
+															<div class="modal-header">
+																<h3 class="modal-title">Change price</h3>
+																<button type="button" class="close" data-dismiss="modal">&times;
+																</button>
+															</div>
+
+
+															<div class="modal-body">
+
+																<div class="form-group">
+																	<input type="hidden" name="idProduct" id="idProduct">
+																	<div class="row form-field">
+																		<h4 class="col-sm-6">Product name :</h4>
+																		<p class=" col-sm-6" id="pName" name="pName"></p>
+																	</div>
+																	<div class="row form-field">
+																		<h4 class="col-sm-4">Category :</h4>
+																		<p class=" col-sm-8" id="cName"></p>
+																	</div>
+																	<div class="row form-field">
+																		<h4 class="col-sm-4">Supplier :</h4>
+																		<p class="col-sm-8" id="su"></p>
+																	</div>
+																	<div class="row form-field">
+																		<h4 class="col-sm-4">Old price :</h4>
+																		<p class=" col-sm-8" id="pr">$</p>
+																	</div>
+																	<div class="row form-field">
+																		<h4 class="col-sm-4" style="line-height: 57px;">New
+																			price :</h4>
+																		<input name="nPrice" class="form-control col-sm-8"
+																			type="number" id="nPrice">
+																	</div>
+
+																	<a type="submit" class="btn" id="confirm" href=""
+																		style="color: #fff; background-color: #19aa81">Confirm
+																	</a>
+																	<button type="button" class="btn" data-dismiss="modal"
+																		style="color: #19aa81; border: 1px solid #19aa81">Cancel
+																	</button>
+																</div>
+
+
+
+
+															</div>
+
+														</div>
+													</div>
+
+												</div>
+										</form>
+									</fieldset>
+								</div>
+							</div>
+							<!-- Add New Stock -->
+							<div class="tab-pane container fade" id="st2">
+								<form th:action="@{/saveProduct}" method="post"
+									enctype="multipart/form-data" th:object="${proDto}"
+									class="form" role="form">
+									<div class="row wrap-new-stock">
+										<div class="col-sm-7">
+
+											<div class="form-group">
+
+
+												<!-- Name product -->
+												<div class="row form-field">
+													<small class="col-sm-4" style="line-height: 57px;">Name
+														product</small> <input name="productName"
+														class="form-control col-sm-8" type="text" id="productName">
+												</div>
+												<!-- Category -->
+												<div class="row form-field">
+													<small class="col-sm-4" style="line-height: 57px;">Category</small>
+													<input name="category" class="form-control col-sm-8"
+														type="text" list="categories" id="category">
+													<datalist id="categories">
+														<option th:each="cateProduct : ${listCate}"
+															th:value="${cateProduct.idCategory}"
+															th:text="${cateProduct.name}"></option>
+
+													</datalist>
+												</div>
+												<!-- Supplier -->
+												<div class="row form-field">
+													<small class="col-sm-4" style="line-height: 57px;">Supplier</small>
+													<input name="suppliers" class="form-control col-sm-8"
+														type="text" list="suppliers" id="suppliers">
+
+												</div>
+												<!-- Price per item -->
+												<div class="row form-field">
+													<small class="col-sm-4" style="line-height: 57px;">Price</small>
+													<input name="price" class="form-control col-sm-8"
+														type="number" id="price" value="0">
+												</div>
+
+
+
+											</div>
+
+										</div>
+
+										<div class="col-sm-5">
+
+											<div class="form-group row">
+												<div class="dct-wrap-img col-sm-12 p-2">
+													<img class="dct-img-cate rounded mx-auto d-block img-fluid"
+														id="myImage" width="auto" height="204px"
+														th:src="@{/imgs/watch.png}">
+												</div>
+												<div class="col-sm-12 row form-field"
+													style="text-align: center">
+													<div
+														class="benestudio-upload-btn-wrapper col-sm-12 row form-field hvr-shrink">
+														<button class="benestudio-btn">
+															<span>Upload a file</span>
+														</button>
+														<input type="file" name="myfile" id="myfile" />
+
+													</div>
+													<!--                                       <input class="col-sm-12 form-control" type="file" name="pic" accept="image/*">-->
+												</div>
+												<!-- Button Add to the cart -->
+												<div class="col-sm-12 row form-field hvr-grow">
+													<input name="add-to-cart" type="submit" value="Complete"
+														class="col-sm-12 sims-btn-add-to-cart">
+												</div>
+											</div>
+
+										</div>
+
+
+									</div>
+								</form>
+							</div>
+							<!-- Add New Category -->
+							<div class="tab-pane container fade" id="st3">
+								<div class="row wrap-imgs-cate">
+									<div class="col-sm-3 p-4 hvr-underline-from-center">
+										<img th:src="@{imgs/watch.png}" class="dct-img-cate"
+											data-toggle="modal" data-target="#modalCate"
+											data-whatever="Apple Watch">
+										<div class="mt-2" style="text-align: center">Apple Watch</div>
+									</div>
+									<div class="col-sm-3 p-4 hvr-underline-from-center">
+										<img th:src="@{imgs/iphone.png}" class="dct-img-cate"
+											data-toggle="modal" data-target="#modalCate"
+											data-whatever="iPhone">
+										<div class="mt-2" style="text-align: center">iPhone</div>
+									</div>
+									<div class="col-sm-3 p-4 hvr-underline-from-center">
+										<img th:src="@{imgs/ipad.png}" class="dct-img-cate"
+											data-toggle="modal" data-target="#modalCate"
+											data-whatever="iPad">
+										<div class="mt-2" style="text-align: center">iPad</div>
+									</div>
+									<div class="col-sm-3 p-4 hvr-underline-from-center">
+										<img th:src="@{imgs/imac.png}" class="dct-img-cate"
+											data-toggle="modal" data-target="#modalCate"
+											data-whatever="Mac">
+										<div class="mt-2" style="text-align: center">Mac</div>
+									</div>
+									<div class="col-sm-3 p-4 hvr-underline-from-center">
+										<img th:src="@{imgs/appletv.png}" class="dct-img-cate"
+											data-toggle="modal" data-target="#modalCate"
+											data-whatever="Apple TV">
+										<div class="mt-2" style="text-align: center">Apple TV</div>
+									</div>
+									<div class="col-sm-3 p-4 hvr-underline-from-center">
+										<img th:src="@{imgs/applemusic.png}" class="dct-img-cate"
+											data-toggle="modal" data-target="#modalCate"
+											data-whatever="Music">
+										<div class="mt-2" style="text-align: center">Music</div>
+									</div>
+									<div class="col-sm-3 p-4 hvr-underline-from-center">
+										<img th:src="@{imgs/airpods.png}" class="dct-img-cate"
+											data-toggle="modal" data-target="#modalCate"
+											data-whatever="AirPods">
+										<div class="mt-2" style="text-align: center">AirPods</div>
+									</div>
+									<div class="col-sm-3 p-4">
+										<img src="imgs/icon-plus.png"
+											class="dct-add-cate-btn hvr-grow-shadow" data-toggle="modal"
+											data-target="#modalCate">
+										<div class="mt-3"
+											style="text-align: center; font-size: 13px; font-style: italic; color: #19aa81">
+											Add new category</div>
+									</div>
+
+									<!-- The Modal 1-->
+									<div class="modal fade" id="modalCate">
+										<div class="modal-dialog">
+											<div class="modal-content">
+
+												<!-- Modal Header -->
+												<div class="modal-header">
+													<h5 class="modal-title">Edit category</h5>
+													<button type="button" class="close" data-dismiss="modal">&times;
+													</button>
+												</div>
+
+												<!-- Modal body -->
+												<div class="modal-body">
+													<form>
+														<div class="form-group">
+															<label for="cate-name" class="col-form-label">Category
+																name:</label> <input type="text" class="form-control"
+																id="cate-name"
+																placeholder="Enter the New Category Name...">
+														</div>
+
+													</form>
+												</div>
+
+												<!-- Modal footer -->
+												<div class="modal-footer">
+													<button type="button" class="btn" data-dismiss="modal"
+														style="color: #fff; background-color: #19aa81">Confirm
+													</button>
+													<button type="button" class="btn" data-dismiss="modal"
+														style="color: #19aa81; border: 1px solid #19aa81">Cancel
+													</button>
+												</div>
+
+											</div>
+										</div>
+									</div>
+									<!-- End the modal 1-->
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			function editProduct(idProduct) {
+				$("#edit").modal();
+				$.ajax({
+					type : "GET",
+					url : "http://localhost:8080/getProduct?idProduct="
+							+ idProduct,
+					dataType : 'json',
+
+					success : function(product) {
+						$("#idProduct").empty();
+						$("#pName").empty();
+						$("#cName").empty();
+						$("#su").empty();
+						$("#pr").empty();
+						$("#idProduct").append(product.idProduct);
+						$("#pName").append(product.nameProduct);
+						$("#cName").append(product.cateProduct.name);
+						$("#su").append(product.supplier);
+						$("#pr").append(product.price);
+
+					}
+				})
+				var nPrice;
+				$("#nPrice").keypress(function(event) {
+					nPrice = $("#nPrice").val();
+				})
+				$("#confirm").attr(
+						"href",
+						"http://localhost:8080/updatePrice?idProduct="
+								+ idProduct + "&nPrice=" + nPrice);
+			};
+		</script>
+		<!-- script for Modal -->
+		<script type="text/javascript">
+			$('#modalCate').on('show.bs.modal', function(event) {
+				var button = $(event.relatedTarget) // Button that triggered the modal
+				var cate = button.data('whatever') // Extract info from data-* attributes
+				// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+				// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+				var modal = $(this)
+				// modal.find('.modal-title').text('New message to ' + cate)
+
+				modal.find('.modal-body input').val(cate);
+
+			})
+		</script>
+		<script type="text/javascript">
+			function readURL(input) {
+
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+
+					reader.onload = function(e) {
+
+						$('#myImage').attr('src', e.target.result);
+
+					}
+
+					reader.readAsDataURL(input.files[0]);
+				}
+			}
+
+			$("#myfile").change(function(e) {
+				readURL(this);
+				var fileName = e.target.files[0].name;
+				console.log(e.target.files[0].name + " f");
+				$(".benestudio-btn span").text(fileName);
+
+			});
+		</script>
+
+
+		<!-- script for datatable -->
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#stocks-data-table').DataTable({
+					searching : false,
+					lengthChange : false,
+					paging:false
+				});
+			});
+		</script>
+
+	</div>
+</body>
+</html>

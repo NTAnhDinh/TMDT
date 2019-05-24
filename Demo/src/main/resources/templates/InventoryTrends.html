@@ -1,0 +1,105 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="DCTHIEN">
+    <meta name="keywords" content="au theme template">
+
+    <!-- Title Page-->
+    <title>Inventory - Trends report</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="css/font-face.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
+    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/theme.css" rel="stylesheet" media="all">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'item1', 'item2'],
+                ['2018', 1000, 400],
+                ['2018', 1170, 460],
+                ['2018', 660, 1120],
+                ['2018', 1030, 540]
+            ]);
+
+            var options = {
+                curveType: 'function',
+                legend: {position: 'bottom'}
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body class="animsition1">
+<div class="page-wrapper">
+
+    <!-- MENU SIDEBAR-->
+    <aside class="menu-sidebar d-none d-lg-block">
+   
+    </aside>
+    <!-- END MENU SIDEBAR-->
+
+    <!-- CONTAINER -->
+    <div class="page-container">
+        <div class="title-container">
+            Inventory - Trends report
+        </div>
+        <div class="parent-container">
+            <div class="wrap-container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <select style="width: 200px; height: 50px;margin-top: 100px; margin-left: 30px;font-size: 16px;color: #7F8282;">
+                            <option value="0">Select year:</option>
+                            <option value="1"></option>
+                        </select>
+
+                        <br>
+                        <select style="width: 200px; height: 50px;margin-top: 20px; margin-left: 30px;font-size: 16px;color: #7F8282;">
+                            <option value="0">Select type of item:</option>
+                        </select>
+                        <br>
+                        <button style="width: 200px; height: 50px;margin-top: 20px; margin-left: 30px; background-color: #19aa81;"
+                                type="button" class="btn btn-info">Generate
+                        </button>
+
+                    </div>
+
+                    <div class="col-sm-9">
+                        <div id="curve_chart" style="width: 100%; height: auto;margin-top: 50px;"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

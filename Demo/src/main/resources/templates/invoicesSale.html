@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoices - Sale Employee</title>
+
+    <!-- Fontfaces CSS-->
+    <link th:href="@{/css/font-face.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/font-awesome-4.7/css/font-awesome.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/font-awesome-5/css/fontawesome-all.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/mdi-font/css/material-design-iconic-font.min.css}" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link th:href="@{/vendor/bootstrap-4.1/bootstrap.min.css}" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link th:href="@{/vendor/animsition/animsition.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/wow/animate.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/css-hamburgers/hamburgers.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/slick/slick.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/select2/select2.min.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}" rel="stylesheet" media="all">
+    <link th:href="@{/vendor/datatables/css/jquery.dataTables.min.css}" rel="stylesheet" media="all"> <!-- datatable -->
+    <link th:href="@{/vendor/datatables/css/dataTables.bootstrap4.min.css}" rel="stylesheet" media="all"> <!-- datatable -->
+    <link th:href="@{/vendor/datatables/css/fixedColumns.bootstrap4.min.css}" rel="stylesheet" media="all"> <!-- datatable -->
+
+    <!-- Main CSS-->
+    <link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+    <link th:href="@{/css/hover-min.css}" rel="stylesheet" media="all"> <!-- hover CSS -->
+   
+    <script th:src="@{/vendor/jquery-3.4.0.min.js}" type="text/javascript"></script>
+     <script th:src="@{/vendor/jquery-ui.min.js}"></script>
+     <script th:src="@{/vendor/datatables/js/jquery.dataTables.min.js}" type="text/javascript"></script>
+    <script th:src="@{/vendor/bootstrap-4.1/popper.min.js}" type="text/javascript"></script>
+   <script th:src="@{/vendor/bootstrap-4.1/bootstrap.min.js}" type="text/javascript"></script>
+ 
+    <script th:src="@{/vendor/datatables/js/dataTables.bootstrap4.min.js}" type="text/javascript"></script> <!-- datatable -->
+    <script th:src="@{/vendor/datatables/js/dataTables.fixedColumns.min.js}" type="text/javascript"></script>
+   
+    
+   <!-- p5 JS -->
+    <script th:src="@{/vendor/p5/p5.min.js}" type="text/javascript"></script>
+    <style type="text/css">
+        th {
+            font-weight: normal !important;
+            color: #19aa81 !important;
+        }
+
+        div.dataTables_wrapper div.dataTables_info {
+            font-size: 13px !important;
+        }
+
+        .page-item.active .page-link {
+            color: #19aa81 !important;
+            border: 0.5px solid #19aa81 !important;
+            background-color: #fff !important;
+            font-size: 13px;
+        }
+
+        .page-link {
+            color: #19aa81;
+            font-size: 13px;
+        }
+
+        .page-link:hover {
+            color: #19aa81;
+        }
+
+        .dataTables_length select {
+            margin: 0 10px;
+        }
+
+        .table td {
+            font-size: 14px;
+        }
+
+        tfoot select {
+            border-radius: 4px !important;
+            border: 0.5px solid #d6d6d6 !important;
+        }
+
+        table.dataTable.display tbody tr:hover.selected {
+            background-color: #19aa81;
+            color: #fff;
+        }
+
+        table.dataTable.display tbody tr.odd.selected {
+            background-color: #19aa81;
+            color: #fff;
+        }
+
+        table.dataTable.display tbody tr.even.selected {
+            background-color: #19aa81;
+            color: #fff;
+        }
+
+        table.dataTable tbody tr.selected {
+            background-color: #19aa81;
+        }
+
+
+    </style>
+  
+  
+  
+   <script type="text/javascript">
+    
+function editIn(idInvoice) {
+	  console.log(idInvoice);
+		$("#detail2-invoice-data-table tbody").empty();
+		$("#list-product-receipt-data-table tbody").empty();
+		  $("#editInvoice").modal();
+	  $.ajax({
+          url: "http://localhost:8080/getInvoices?idInvoice="+idInvoice,
+          method: "GET",
+          contentType: "application/json",
+          dataType: "json",
+          success: function (id) {
+	//  $("#list-product-receipt-data-table").attr('id',$("#list-product-receipt-data-table").closest('table').attr('id')+'_'+idInvoice)
+	//  console.log('get '+$("#list-product-receipt-data-table").closest('table').attr('id'));
+	for(var i=0,l=id.length;i<l;i++){
+  
+			var row='<tr><td><span >'+id[0].quantity+'</span><input type="hidden" name="nameProduct"></td>'
+				+'<td><input name="quantity"  type="number" class="col-sm-4" style="border:solid 1px" value='+id[0].quantity+'></td>'
+				+'<td><span >'+id[0].price+'</span><input type="hidden" name="price"></td>'
+				+'<td><button type="button" class="btnSelect">  <i class="fa fa-share "'
+              +'  style="color: #19aa81;"></i></button>  </td> </tr>';
+				$("#detail2-invoice-data-table tbody").append(row);
+	
+				}
+
+	 //code to read selected table row cell data (values).
+   $(".btnSelect").click(function(){
+   	 var currentRow=$(this).closest("tr");
+   	 var col1=currentRow.find("td:eq(0)").text();
+   	 var col2=currentRow.find("td:eq(1)").val();
+   	 var col3=currentRow.find("td:eq(2)").text();
+   	 var data=col1+"\n"+col2+"\n"+col3;
+   	 alert(data);
+   	$(this).closest("tr").remove();
+   	var row='<tr><td><span >'+col1+'</span></td>'
+	+'<td>'+col3+' </td> </tr>';
+	$("#list-product-receipt-data-table tbody").append(row);
+   });
+          }
+	  
+	  })
+	
+	
+	 	 
+                  /*    $(".remove").on("click", function (evt) {
+                          var t1 = $("#detail2-invoice-data-table").DataTable();
+                          var tr = $(this).closest("tr");
+                          var row = t1.row(tr);
+                          var data = JSON.parse(JSON.stringify(row.data()));
+                          row.remove().draw();
+                       
+                     	var t2= $("#list-product-receipt-data-table").DataTable({
+                     					retrieve: true,
+                        			  searching: false,
+                                      "paging": false,
+                                      "ordering": false,
+                                      "info": false,
+                                      data: data,
+                                      "columns": [
+                                          
+                                          { "data": "Name"},
+                                          { "data": "Qty" },
+                                          { "data": "Price" }
+                                      ]
+                        		  }
+                          );
+                        t2.row.add(data).draw();
+                   
+                      })
+                      
+                     
+                      
+                      
+                       var t3 = $("#list-product-receipt-data-table").DataTable();
+                      t3.clear().draw();
+                     // console.log("ha"+t3.data);*/
+                 
+       
+     
+	  
+    };
+ 
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+});
+</script>
+<script>
+function exportPro(idInvoice) {
+	$("#Unknow").modal();
+	$.ajax({
+		type : "GET",
+		url : "http://localhost:8080/getInvoices?idInvoice="+idInvoice,
+		dataType : 'json',
+
+		success : function(ld) {
+			  console.log(ld);
+			  var name=null;
+			  var quan =null;
+			  var price =null;
+			  console.log(ld);
+			  $("#Unknow tbody").empty();
+			  $("#title").empty();
+				$("#title").append(ld[0].id.idInvoice);
+			for(var i=0,l=ld.length;i<l;i++){
+				 //name=+ '<br>';
+				 //quan =+ '<br>';
+				// price =+ '<br>';
+				/// $("#name").append(name);
+					//$("#qua").append(quan);
+				
+			var row='<tr><td><span >'+ld[i].product.nameProduct+
+				'</span></td><td><input   type="number" class="col-sm-4" style="border:solid 1px" value='
+				+ld[i].quantity+'></td><td><span >'
+				+ld[i].price+'</span></td><td ><span id="mess_error"></span></td> </tr>';
+			$("#Unknow tbody").append(row);
+		
+			//console.log(ld[i].product.idProduct);
+			var id=ld[i].product.idProduct;
+	var e=0;
+			$.ajax({
+					type : "GET",
+					url : "http://localhost:8080/pending?idWare="+1+"&idProduct="+ld[i].product.idProduct+"&q="+ld[i].quantity
+							+"&inv="+ld[i].id.idInvoice,
+					success : function(data) {
+						console.log(data);
+						if(data==1){
+						
+						$("#mess_error").attr('id',$("#mess_error").attr('id')+id).empty().text("Not enough quantity").css('color','red');
+						}
+						else{
+							$("#mess_error").attr('id',$("#mess_error").attr('id')+id).text('');
+						}
+						}
+				})
+			}
+				
+		//	$('.adct_pending_test').click(function(){
+				
+				
+		//	})				
+				   
+			}
+			
+			 
+		
+	})
+	   
+}
+</script>
+<script >
+  function seeDetail(idInvoice) {
+	  console.log(idInvoice);
+	  $("#detailInvoice").modal();
+    	$.ajax({
+			type : "GET",
+			url : "http://localhost:8080/getInvoices?idInvoice="+idInvoice,
+			dataType : 'json',
+
+			success : function(ld) {
+				  console.log(ld);
+				  var name=null;
+				  var quan =null;
+				  var price =null;
+				  $("#nameProduct").empty();
+				  $("#quantity").empty();
+				  $("#price").empty();
+				for(var i=0,l=ld.length;i<l;i++){
+					 name=ld[i].product.nameProduct+ '<br>';
+					 quan =ld[i].quantity+ '<br>';
+					 price =ld[i].price+ '<br>';
+					 $("#nameProduct").append(name);
+						$("#quantity").append(quan);
+						$("#price").append(price);
+				}
+				
+				 
+				}
+    	})
+    };
+ 
+</script>
+<script >
+  
+	  $('#update').on('click', function(evt) {
+	    	$.ajax({
+				type : "POST",
+				url : "http://localhost:8080/edit?idInvoice="+idInvoice,
+				dataType : 'json',
+
+				success : function(ld) {
+					
+					}
+	    	})
+		  })
+ 
+</script>
+<script>
+function deleteIn(idInvoice) {
+	  console.log(idInvoice);
+	  $("#deleteIn").modal();
+	  $("#btnDelete"). attr("href", "http://localhost:8080/delete?idInvoice="+idInvoice);
+    };
+</script>
+
+</head>
+<body class="animsition1">
+<div class="page-wrapper">
+    <!-- MENU SIDEBAR-->
+    <aside class="menu-frame">
+        <iframe th:src="@{/sale}" frameborder="0" height="100%"></iframe>
+    </aside>
+    <!-- END MENU SIDEBAR-->
+
+    <div class="page-container">
+        <div class="title-container">
+            Invoices
+        </div>
+        <div class="parent-container">
+            <div class="container">
+                <div class="invoices-sale-container">
+                    <div class="container pr-3 pl-3">
+                        <div class="form-group">
+                            <fieldset>
+                                <form class="form-group" >
+                                    <div class="table-responsive col-sm-12">
+                                        <table id="invoices-data-table" 
+                                               class="table table-borderless "
+                                               width="100%" cellspacing="0">
+                                            <thead>
+                                            <tr>
+                                                 <th >Employee</th>
+                                                <th >Dated create</th>
+                                                 <th >Total</th>
+                                                <th >Status</th>
+                                                <th class="dt-right">Action</th>
+                                            </tr>
+                                            </thead>
+                                                                                 
+                                            <tbody >
+                                            <tr th:each="invoice : ${listInvoi}" >
+                                                <td th:text="${invoice.user.name}"></td>
+                                                <td th:text="${invoice.date}"></td>
+                                                <td th:text="${invoice.total}"></td>
+                                                <td  th:switch="${invoice.status}">
+                                                 <span class="badge badge-info" th:case=0 >New</span>
+                                               <span class="badge badge-danger" th:case=4 >Deleted</span>
+    										   <span  style="color:blue" th:case=1>Processing</span>
+    										     <span class="badge badge-success" th:case=3 >Finish</span>
+    										      <span  class="badge badge-warning" th:case=2>Delivering</span>
+                                                </td>
+                                                <td class="dt-right">
+                                                     <button type="button"   th:onclick="seeDetail([[${invoice.idInvoice}]]);" >  
+                                                       <i class="fa fa-info hvr-bob pl-5 pr-3" style="color: #19aa81;"></i> </button>
+                                                  
+                                                    <button type="button" th:onclick="editIn([[${invoice.idInvoice}]]);" data-target="#editInvoice" data-whatever="[[${invoice.idInvoice}]]">
+                                                        <i class="fa fa-pencil-square-o hvr-bob pl-5 pr-3"
+                                                           style="color: #19aa81;"></i>
+                                                    </button>
+                                                     <button type="button" th:onclick="deleteIn([[${invoice.idInvoice}]]);">
+                                                        <i class="fa fa-trash hvr-bob pr-3 pl-5"
+                                                           style="color: #19aa81;"></i>
+                                                    </button>
+                                                     <button type="button" th:onclick="exportPro([[${invoice.idInvoice}]]);">
+                                                     <i class="fa fa-share hvr-bob pr-3 pl-5"
+                                                           style="color: #19aa81;"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                             
+                                            
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </form>
+                                           <!-- Modal Info -->
+                                <div class="modal fade"  tabindex="-1" role="dialog"
+                                      aria-hidden="true" id="detailInvoice" >
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title" id="infoTitleModalLabel" style="color: #19aa81">
+                                                    Infomation invoice</h6>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container ">
+                                                    <div class="col-sm-12 container"> <!--child-left-container-->
+                                                        <legend class="pl-5" style="font-size: 17px; ">INVOICE INFO
+                                                      </legend>
+                                                        
+                                                        <legend class="pl-5" style="font-size: 16px; color: #7F8282">
+                                                            SIMS Store
+                                                        </legend>
+                                                        <legend class="pl-5" style="font-size: 16px; color: #7F8282">
+                                                            72A, Nguyen Chi Thanh Str., Binh Thanh, HCMC
+                                                        </legend>
+                                                        <br>
+                                                    </div>
+                                                    <div class="col-sm-12 container"><!--child-right-container-->
+                                                        <legend class="pl-5" style="font-size: 17px;">ORDER SUMMARY
+                                                        </legend>
+                                                        <legend class="pl-5" style="font-size: 16px; color: #7F8282">
+                                                            Invoice ID &#160;
+                                                          <span style="color: black" id="idInvoice"></span>
+                                                        </legend>
+                                                        <legend class="pl-5" style="font-size: 16px; color: #7F8282">
+                                                            Employee &#160;<span style="color: black">backpanther</span>
+                                                        </legend>
+                                                       
+                                                        <div class="form-group pl-2">
+                                                            <fieldset> <hr >
+                                                                <form class="form-group" >
+                                                                    <div class="table-responsive col-sm-12">
+                                                                        <table id="detail1-invoice-data-table"
+                                                                               class="table table-borderless table-hover display nowrap "
+                                                                               width="100%" cellspacing="0">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th class="dt-left">Name product</th>
+                                                                                <th class="dt-center">Number</th>
+                                                                                <th class="dt-left">Price</th>
+                                                                                <th class="dt-left"></th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                           
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td class="dt-left" width="40%">
+                                                                                <span id="nameProduct"></span>    
+                                                                                </td>
+                                                                                <td class="dt-center" width="20%"><span id="quantity"></span></td>
+                                                                                <td class="dt-left" width="40%">$
+                                                                                   <span id="price"></span>
+                                                                                </td>
+                                                                                <td id="${message}"></td>
+                                                                            </tr>
+
+                                                                            </tbody>
+																	  <tfoot>
+                                                                            <tr>
+                                                                             <th></th>   <th class="dt-left"
+                                                                                    style="font-size: 17px; color: black">
+                                                                                    Total
+                                                                                </th>
+                                                                                
+                                                                                <th class="dt-left"
+                                                                                    style="font-size: 17px; color: black">
+                                                                                    $ 1850.5
+                                                                                </th>
+                                                                            </tr>
+                                                                            </tfoot> 
+                                                                        </table>
+                                                                    </div>
+                                                                </form>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="dct-btn-outline-nobg" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <!-- The Modal -->
+  <div class="modal" id="deleteIn">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h6 class="modal-title" id="infoTitleModalLabel" style="color: #19aa81">Reason for canceling the invoice</h6>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+        <div class="form-group">
+									<form th:action="@{/createFeedback}" method="post" class="form"
+										role="form" th:object="${feedback}">
+
+										<!-- Title report -->
+										<div class="row form-field">
+         <p class="col-sm-2">Name</p>
+         <input name="reason" id="reason" type="text" class="form-control col-sm-4" list="ed">
+											<datalist id="ed">
+												<option value="Report selling goods"></option>
+												<option value="Report profit and lost"></option>
+												<option value="Report customer complaints"></option>
+												<option value="Report sales overview"></option>
+												<option value="Report defective products"></option>
+											</datalist>
+											 <p class="col-sm-2">Status</p>
+         <input name="reason" id="reason" type="text" class="form-control col-sm-4" list="">
+											<datalist id="reason">
+												<option value="Active"></option>
+												<option value="Deactive"></option>
+											</datalist>
+											</div>
+											<div class="row form-field">
+											<p>Description</p>
+											<textarea rows="5" cols="10" class="form-control"> </textarea>
+											</div>
+											
+											</form></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <a type="button" class="btn btn-danger" id="btnDelete" href="">Delete</a>
+           <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+                                <!-- Modal edit -->
+                                   <!-- Modal Cancel -->
+                                <div class="modal fade" id="editInvoice" tabindex="-1" role="dialog"
+                                     aria-labelledby="cancelModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title" id="cancelTitleModalLabel"
+                                                    style="color: #19aa81">Edit infomation invoice</h6>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container row">
+                                                    <div class="col-sm-8 child-left-container">
+                                                        <legend class="mt-2 pl-5" style="font-size: 17px;">INVOICE
+                                                            INFO
+                                                        </legend>
+                                                        <legend class="pl-5" style="font-size: 14px; color: #7F8282">
+                                                            Invoice ID &#160;<input value="123456" name="idInvoice" id="idInvoice" disabled="disabled">
+                                                        </legend>
+                                                        <legend class="pl-5" style="font-size: 14px; color: #7F8282">
+                                                            Employee &#160;<input th:value="${#authentication.getPrincipal().username}" name="employee" id="employee" disabled="disabled" >
+                                                        </legend>
+                                                        <legend class="pl-5" style="font-size: 14px; color: #7F8282">
+                                                        Date create   <input type="date" style="border: solid 1px">
+                                                        </legend>
+
+                                                        <div class="pl-2">
+                                                            <fieldset>
+                                                                <form  class="form-group" th:action="@{/createInvoice}" th:object="${bill}" method="post">
+                                                                    <div class="table-responsive col-sm-12">
+                                                                        <table id="detail2-invoice-data-table"
+                                                                               class="table table-borderless table-hover display nowrap"
+                                                                               width="100%" cellspacing="0">
+                                                                            <thead>
+                                                                            <th >Name</th>
+                                                                            
+                                                                            <th >Qty</th>
+                                                                            <th>Price</th>
+                                                                            <th></th>
+                                                                            </thead>
+                                                                          <tfoot>
+                                                                            <tr>
+                                                                                <th>Total invoice</th>
+                                                                                <th></th>
+                                                                                <th></th>
+                                                                                <th class="dt-right">$ 225.5</th>
+                                                                            </tr>
+                                                                            </tfoot> 
+                                                                            <tbody >
+                                                                        
+                                                                            </tbody>
+
+                                                                        </table>
+                                                                    </div>
+                                                                    <button class="btn pl-3 pr-3 dct-btn-normal float-sm-right"
+                                                                            type="submit">Save
+                                                                    </button>
+                                                                </form>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="pl-2">
+                                                            <fieldset>
+
+                                                            </fieldset>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-sm-4 child-right-container">
+                                                        <legend class="mt-2 pl-3"
+                                                                style="font-size: 17px; text-align: right">CREATE
+                                                            RECEIPT
+                                                        </legend>
+                                                        <legend class="pl-3" style="font-size: 14px; color: #7F8282">
+                                                            Receipt ID &#160;<span style="color: black">123456</span>
+                                                        </legend>
+                                                        <legend class="pl-3" style="font-size: 14px; color: #7F8282">
+                                                            Customer &#160;<span style="color: black">scartless</span>
+                                                        </legend>
+                                                        <div class="pl-3">
+                                                            <textarea class="form-control" placeholder="Note.." style="font-size: 12px"></textarea>
+                                                        </div>
+
+                                                        <div class="form-group pl-2">
+                                                            <fieldset>
+                                                                <form action="" class="form-group" method="">
+                                                                    <div class="table-responsive col-sm-12">
+                                                                        <table id="list-product-receipt-data-table"
+                                                                               class="table table-borderless table-hover display nowrap rc-tb"
+                                                                               width="100%" cellspacing="0">
+                                                                            <thead>
+                                                                            <th class="dt-left">Name</th>
+                                                                            <th class="dt-right">Qty.</th>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                         <tr></tr>
+
+                                                                            </tbody>
+
+                                                                        </table>
+                                                                        <button id="btn-crt-receipt" class="btn pl-3 pr-3 dct-btn-normal float-sm-right"
+                                                                                data-dismiss="modal" type="button">Create
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="dct-btn-outline-nobg" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal phieu xuat hang -->
+                                <div class="modal fade"  tabindex="-1" role="dialog"
+                                      aria-hidden="true" id="Unknow" >
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="infoTitleModalLabel" style="color: #19aa81">
+                                                   Phiếu xuất kho từ đơn hàng</h4><span id="title" style="margin-left: 10px"></span>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container ">
+                                                    
+                                                    <div class="col-sm-12 container"><!--child-right-container-->
+                                                        
+                                                        <div class="form-group pl-2">
+                                                            <fieldset> <hr >
+                                                                <form class="form-group"  >
+                                                                    <div class="table-responsive col-sm-12">
+                                                                        <table id="detail1-invoice-data-table"
+                                                                               class="table table-borderless table-hover display nowrap"
+                                                                               width="100%" cellspacing="0">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th class="dt-left">Name product</th>
+                                                                                <th class="dt-center">Number</th>
+                                                                                <th class="dt-left">Price</th>
+                                                                                <th class="dt-left">Action</th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                           
+                                                                            <tbody>
+                                                                           
+
+                                                                            </tbody>
+																	<!--   <tfoot>
+                                                                            <tr>
+                                                                             <th></th>   <th class="dt-left"
+                                                                                    style="font-size: 17px; color: black">
+                                                                                    Total
+                                                                                </th>
+                                                                                
+                                                                                <th class="dt-left"
+                                                                                    style="font-size: 17px; color: black">
+                                                                                    $ 1850.5
+                                                                                </th>
+                                                                            </tr>
+                                                                            </tfoot> --> 
+                                                                        </table>
+                                                                    </div>
+                                                                </form>
+                                                            </fieldset>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="dct-btn-outline-nobg" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="button" class="btn btn-success" >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- JAVASCRIPT IS CRAZY *** JAVASCRIPT IS CRAZY *** JAVASCRIPT IS CRAZY *** JAVASCRIPT IS CRAZY -->
+
+<!-- script for datatable -->
+ 
+
+<!-- script for datatable -->
+<script type="text/javascript">
+    $(document).ready(function () {
+      
+</script>
+
+
+</html>

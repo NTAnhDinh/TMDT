@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<!-- Required meta tags-->
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="au theme template">
+	<meta name="author" content="KimChi-DCTHIEN(edit)">
+	<meta name="keywords" content="au theme loginscreen">
+
+	<!-- Title Page-->
+	<title>Dashboard-Template</title>
+
+	<!-- Fontfaces CSS-->
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/css/font-face.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/font-awesome-4.7/css/font-awesome.min.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/font-awesome-5/css/fontawesome-all.min.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/mdi-font/css/material-design-iconic-font.min.css}" >
+	<!-- Bootstrap CSS-->
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/bootstrap-4.1/bootstrap.min.css}" >
+
+	<!-- Vendor CSS-->
+	<link  rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/animsition/animsition.min.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/wow/animate.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/slick/slick.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/select2/select2.min.css}" >
+	<link rel="stylesheet" media="all" type="text/css" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}" >
+
+	
+	<!-- Customize CSS by KimChi -->
+	<link th:href="@{/css/loginchi.css}" rel="stylesheet" type="text/css">
+
+
+
+</head>
+
+<body>
+
+	<div layout:fragment="content" th:remove="tag" class="login-page">
+		<form  th:action="@{/login}" method="post" class="login-form">
+		<div class="form">
+			<div>
+				<h1 class="sims-login-title">SIMS</h1>
+				<p class="sims-login-slogan">Sales and Inventory Management system </p>
+			</div>
+		<div th:if="${param.error}">
+                    <div class="alert alert-danger">
+                        Invalid username or password.
+                    </div>
+                </div>
+                <div th:if="${param.logout}">
+                    <div class="alert alert-info">
+                        You have been logged out.
+                    </div>
+                </div>
+			 <div class="form-group">
+              
+				<input type="text" class="form-control" placeholder="Username" required="required" name="username"/>
+				<input type="password" class="form-control" placeholder="Password" required="required" name="password" />
+				<input type="submit" value="Sign in"/>
+			
+		</div></div>
+		</form>
+	</div>
+
+
+</body>
+
+</html>
