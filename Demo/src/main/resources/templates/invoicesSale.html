@@ -9,7 +9,8 @@
     <link th:href="@{/vendor/font-awesome-4.7/css/font-awesome.min.css}" rel="stylesheet" media="all">
     <link th:href="@{/vendor/font-awesome-5/css/fontawesome-all.min.css}" rel="stylesheet" media="all">
     <link th:href="@{/vendor/mdi-font/css/material-design-iconic-font.min.css}" rel="stylesheet" media="all">
-
+ <!-- Main CSS-->
+    <link href="oss/css/sidebar.css" rel="stylesheet" media="all">
     <!-- Bootstrap CSS-->
     <link th:href="@{/vendor/bootstrap-4.1/bootstrap.min.css}" rel="stylesheet" media="all">
 
@@ -26,7 +27,7 @@
     <link th:href="@{/vendor/datatables/css/fixedColumns.bootstrap4.min.css}" rel="stylesheet" media="all"> <!-- datatable -->
 
     <!-- Main CSS-->
-    <link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+    <link th:href="@{oss/css/theme.css}" rel="stylesheet" media="all">
     <link th:href="@{/css/hover-min.css}" rel="stylesheet" media="all"> <!-- hover CSS -->
    
     <script th:src="@{/vendor/jquery-3.4.0.min.js}" type="text/javascript"></script>
@@ -108,146 +109,133 @@
     
 function editIn(idInvoice) {
 	  console.log(idInvoice);
+	 
 		$("#detail2-invoice-data-table tbody").empty();
 		$("#list-product-receipt-data-table tbody").empty();
-		  $("#editInvoice").modal();
+		$("#invoice").empty();
+		 $("#invoice").val(idInvoice);
+    	 $("#total").empty();
+    	 $("#date").empty();
+    	 $("#date").val( $("#dateInv").text());
+    	
 	  $.ajax({
           url: "http://localhost:8080/getInvoices?idInvoice="+idInvoice,
           method: "GET",
           contentType: "application/json",
           dataType: "json",
-          success: function (id) {
-	//  $("#list-product-receipt-data-table").attr('id',$("#list-product-receipt-data-table").closest('table').attr('id')+'_'+idInvoice)
-	//  console.log('get '+$("#list-product-receipt-data-table").closest('table').attr('id'));
-	for(var i=0,l=id.length;i<l;i++){
-  
-			var row='<tr><td><span >'+id[0].quantity+'</span><input type="hidden" name="nameProduct"></td>'
-				+'<td><input name="quantity"  type="number" class="col-sm-4" style="border:solid 1px" value='+id[0].quantity+'></td>'
-				+'<td><span >'+id[0].price+'</span><input type="hidden" name="price"></td>'
+          success: function (data) {
+        	var arr=data[0];
+        	 var total=0;
+			for(var i=0,l=arr.length;i<l;i++){
+          total+=arr[i].price*arr[i].quantity;
+			var row='<tr><td><span >'+arr[i].product.nameProduct+'</span></td>'
+				+'<td><input name="quantity" id="quantity"  type="number"  class="col-sm-4" style="border:solid 1px" value='+arr[i].quantity+'></td>'
+				+'<td><span >'+arr[i].price+'</span></td>'
 				+'<td><button type="button" class="btnSelect">  <i class="fa fa-share "'
               +'  style="color: #19aa81;"></i></button>  </td> </tr>';
 				$("#detail2-invoice-data-table tbody").append(row);
 	
 				}
-
-	 //code to read selected table row cell data (values).
-   $(".btnSelect").click(function(){
-   	 var currentRow=$(this).closest("tr");
-   	 var col1=currentRow.find("td:eq(0)").text();
-   	 var col2=currentRow.find("td:eq(1)").val();
-   	 var col3=currentRow.find("td:eq(2)").text();
-   	 var data=col1+"\n"+col2+"\n"+col3;
-   	 alert(data);
-   	$(this).closest("tr").remove();
-   	var row='<tr><td><span >'+col1+'</span></td>'
-	+'<td>'+col3+' </td> </tr>';
-	$("#list-product-receipt-data-table tbody").append(row);
-   });
-          }
-	  
-	  })
-	
-	
-	 	 
-                  /*    $(".remove").on("click", function (evt) {
-                          var t1 = $("#detail2-invoice-data-table").DataTable();
-                          var tr = $(this).closest("tr");
-                          var row = t1.row(tr);
-                          var data = JSON.parse(JSON.stringify(row.data()));
-                          row.remove().draw();
-                       
-                     	var t2= $("#list-product-receipt-data-table").DataTable({
-                     					retrieve: true,
-                        			  searching: false,
-                                      "paging": false,
-                                      "ordering": false,
-                                      "info": false,
-                                      data: data,
-                                      "columns": [
-                                          
-                                          { "data": "Name"},
-                                          { "data": "Qty" },
-                                          { "data": "Price" }
-                                      ]
-                        		  }
-                          );
-                        t2.row.add(data).draw();
-                   
-                      })
-                      
-                     
-                      
-                      
-                       var t3 = $("#list-product-receipt-data-table").DataTable();
-                      t3.clear().draw();
-                     // console.log("ha"+t3.data);*/
-                 
-       
-     
-	  
-    };
- 
-</script>
-<script type="text/javascript">
-$(document).ready(function(){
-});
+			 $("#total").text("$"+total);
+				 //code to read selected table row cell data (values).
+			   $(".btnSelect").click(function(){
+			   	 var currentRow=$(this).closest("tr");
+			   	 var col1=currentRow.find("td:eq(0)").text();
+			   	 var col2=$("#quantity").val();
+			   
+			   	 var col3=currentRow.find("td:eq(2)").text();
+			   	 var data=col1+"\n"+$("#quantity").val()+"\n"+col3;
+			   	 console.log(data);
+			   	$(this).closest("tr").remove();
+			   	var row='<tr><td><span >'+col1+'</span></td>'
+				+'<td><span >'+col2+' </span></td> </tr>';
+				$("#list-product-receipt-data-table tbody").append(row);
+				
+			   });
+			   
+				 
+			   $("#editInvoice").modal();
+			          
+			        	  }
+				  })
+			
+				 
+			    };
+				  
+			 
 </script>
 <script>
+$('#quantity').on('keyup', function(e) {
+	  var currentRow=$(this).closest("tr");
+	   	 var col2=$("#quantity").val();
+	   	 var col3=currentRow.find("td:eq(2)").text();
+	    var userInput = e.target.value;
+	    $("#total").empty();
+	   // $("#total").text((col2-userInput)*col3);
+	    console.log(userInput);
+
+	});
+</script>
+<!-- script for datatable -->
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#invoices-data-table').DataTable({
+					searching : true,
+					lengthChange : false,
+					paging:false, info:false
+				});
+			});
+		</script>
+<script>
 function exportPro(idInvoice) {
-	$("#Unknow").modal();
+	
 	$.ajax({
 		type : "GET",
 		url : "http://localhost:8080/getInvoices?idInvoice="+idInvoice,
 		dataType : 'json',
 
-		success : function(ld) {
-			  console.log(ld);
-			  var name=null;
+		success : function(data) {
+			 /* var name=null;
 			  var quan =null;
-			  var price =null;
-			  console.log(ld);
+			  var price =null;*/
+			  console.log(data);
+			  if(data[1]==3){
+        		  alert('Invoice finished');
+        	  }
+			  else{
+			 var arr=data[0];
 			  $("#Unknow tbody").empty();
 			  $("#title").empty();
-				$("#title").append(ld[0].id.idInvoice);
-			for(var i=0,l=ld.length;i<l;i++){
-				 //name=+ '<br>';
-				 //quan =+ '<br>';
-				// price =+ '<br>';
-				/// $("#name").append(name);
-					//$("#qua").append(quan);
+				$("#title").append(arr[0].id.idInvoice);
 				
-			var row='<tr><td><span >'+ld[i].product.nameProduct+
-				'</span></td><td><input   type="number" class="col-sm-4" style="border:solid 1px" value='
-				+ld[i].quantity+'></td><td><span >'
-				+ld[i].price+'</span></td><td ><span id="mess_error"></span></td> </tr>';
+			for(var i=0,l=arr.length;i<l;i++){
+				
+			var row='<tr><td><input name="nameProduct" type="text" value="'+arr[i].product.nameProduct+
+				'" ></td><td><input  name="quantity" id="quantity" type="number" class="col-sm-4" style="border:solid 1px" value='
+				+arr[i].quantity+'></td><td><span >'
+				+arr[i].price+'</span></td><td ><span id="mess_error" name="status" class="pl-10"></span></td> </tr>';
 			$("#Unknow tbody").append(row);
 		
-			//console.log(ld[i].product.idProduct);
-			var id=ld[i].product.idProduct;
-	var e=0;
+	
 			$.ajax({
 					type : "GET",
-					url : "http://localhost:8080/pending?idWare="+1+"&idProduct="+ld[i].product.idProduct+"&q="+ld[i].quantity
-							+"&inv="+ld[i].id.idInvoice,
+					url : "http://localhost:8080/pending?idWare="+1+"&idProduct="+arr[i].product.idProduct+"&q="+arr[i].quantity
+							+"&inv="+arr[i].id.idInvoice,
 					success : function(data) {
-						console.log(data);
+						console.log(data);var x=0;
 						if(data==1){
 						
-						$("#mess_error").attr('id',$("#mess_error").attr('id')+id).empty().text("Not enough quantity").css('color','red');
+						$("#mess_error").attr('id',$("#mess_error").attr('id')+(++i)).empty().text("Not enough quantity").css('color','red');
 						}
 						else{
-							$("#mess_error").attr('id',$("#mess_error").attr('id')+id).text('');
+							$("#mess_error").attr('id',$("#mess_error").attr('id')+(++i)).text('');
 						}
 						}
 				})
 			}
 				
-		//	$('.adct_pending_test').click(function(){
-				
-				
-		//	})				
-				   
-			}
+			$("#Unknow").modal();			
+			}}
 			
 			 
 		
@@ -259,30 +247,33 @@ function exportPro(idInvoice) {
   function seeDetail(idInvoice) {
 	  console.log(idInvoice);
 	  $("#detailInvoice").modal();
+		$("#detail1-invoice-data-table tbody").empty();
+		 $("#IdInvoice").empty();
+		 $("#idInvoice").empty();
+		 $("#totalBill").empty();
     	$.ajax({
 			type : "GET",
 			url : "http://localhost:8080/getInvoices?idInvoice="+idInvoice,
 			dataType : 'json',
 
-			success : function(ld) {
-				  console.log(ld);
-				  var name=null;
-				  var quan =null;
-				  var price =null;
-				  $("#nameProduct").empty();
-				  $("#quantity").empty();
-				  $("#price").empty();
-				for(var i=0,l=ld.length;i<l;i++){
-					 name=ld[i].product.nameProduct+ '<br>';
-					 quan =ld[i].quantity+ '<br>';
-					 price =ld[i].price+ '<br>';
-					 $("#nameProduct").append(name);
-						$("#quantity").append(quan);
-						$("#price").append(price);
-				}
-				
+			success : function(data) {
+				  console.log(data);
+				 var arr=data[0];
+				 $("#IdInvoice").append(arr[0].id.idInvoice);
+				 $("#idInvoice").val(arr[0].id.idInvoice);
+				 var total=0;
+				  for(var i=0,l=arr.length;i<l;i++){
+						total+=arr[i].quantity*arr[i].price;
+						var row='<tr><td><input name="nameProduct" type="text" value="'+arr[i].product.nameProduct+
+							'" ></td><td><input  name="quantity" id="quantity" type="number" class="col-sm-4"  value='
+							+arr[i].quantity+'></td><td><span >'
+							+arr[i].price+'</span></td> </tr>';
+						$("#detail1-invoice-data-table tbody").append(row);
 				 
 				}
+				  $("#totalBill").text("$ "+total);
+				  
+				  }
     	})
     };
  
@@ -304,9 +295,10 @@ function exportPro(idInvoice) {
 </script>
 <script>
 function deleteIn(idInvoice) {
-	  console.log(idInvoice);
 	  $("#deleteIn").modal();
-	  $("#btnDelete"). attr("href", "http://localhost:8080/delete?idInvoice="+idInvoice);
+	 // $("#btnDelete"). attr("href", "http://localhost:8080/delete?idInvoice="+idInvoice);
+	  
+	  $("#id"). attr("value", idInvoice);
     };
 </script>
 
@@ -315,13 +307,42 @@ function deleteIn(idInvoice) {
 <div class="page-wrapper">
     <!-- MENU SIDEBAR-->
     <aside class="menu-frame">
-        <iframe th:src="@{/sale}" frameborder="0" height="100%"></iframe>
+    <div class="logo">
+        <a href="#">
+            <img th:src="@{/imgs/avatar.png}" alt="Cool Admin">
+        </a>
+       <small sec:authentication="name"></small>
+    </div>
+    <div class="menu-sidebar__content js-scrollbar1">
+        <nav class="navbar-sidebar">
+            <ul class="list-unstyled navbar__list">
+                <li >
+                    <a class="js-arrow" th:href="@{/createbill}">
+                        <i class="fas fa-hand-pointer-o"></i>New order
+                    </a>
+                </li>
+                <li class="active ">
+                    <a th:href="@{/invoicesSale}"> <i class="fas fa-database"></i>Management invoice
+                    </a>
+                </li>
+                
+                <li>
+                    <a th:href="@{/historyWarehouse}"> <i class="fas fa-history"></i>Management warehouse
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/logout}"> <i class="fas fa-sign-out"></i>Sign out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
     </aside>
     <!-- END MENU SIDEBAR-->
 
     <div class="page-container">
         <div class="title-container">
-            Invoices
+         Manage Invoices
         </div>
         <div class="parent-container">
             <div class="container">
@@ -347,7 +368,7 @@ function deleteIn(idInvoice) {
                                             <tbody >
                                             <tr th:each="invoice : ${listInvoi}" >
                                                 <td th:text="${invoice.user.name}"></td>
-                                                <td th:text="${invoice.date}"></td>
+                                                <td th:text="${invoice.date}" id="dateInv"></td>
                                                 <td th:text="${invoice.total}"></td>
                                                 <td  th:switch="${invoice.status}">
                                                  <span class="badge badge-info" th:case=0 >New</span>
@@ -379,6 +400,25 @@ function deleteIn(idInvoice) {
                                             </tbody>
 
                                         </table>
+                                        	<div class="row" >
+							<ul class="pagination">
+						<li
+							th:class="${currentIndex == 1}? 'page-item disabled' : 'page-item'">
+							<a class="page-link"  th:href="@{/invoicesSale?p={i}(i=${currentIndex})}">First</a>
+						</li>
+				<li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+					th:class="${item == currentIndex ? 'page-item active' :'page-item' }">
+					<a class="page-link"  th:href="@{/invoicesSale?p={i}(i=${item})}"> <span
+						th:text='${item}'>1</span>
+				</a>
+				</li>
+			
+					<li
+						th:class="${currentIndex == totalPage}? 'page-item disabled':'page-item'">
+						<a class="page-link" th:href="@{/invoicesSale?p={i}(i=${totalPage})}">Last</a>
+					</li>
+				</ul>
+							</div>
                                     </div>
                                 </form>
                                            <!-- Modal Info -->
@@ -388,7 +428,7 @@ function deleteIn(idInvoice) {
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h6 class="modal-title" id="infoTitleModalLabel" style="color: #19aa81">
-                                                    Infomation invoice</h6>
+                                                    Infomation invoice : <span id="IdInvoice"></span></h6>
                                                 <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
@@ -411,12 +451,11 @@ function deleteIn(idInvoice) {
                                                     <div class="col-sm-12 container"><!--child-right-container-->
                                                         <legend class="pl-5" style="font-size: 17px;">ORDER SUMMARY
                                                         </legend>
-                                                        <legend class="pl-5" style="font-size: 16px; color: #7F8282">
-                                                            Invoice ID &#160;
-                                                          <span style="color: black" id="idInvoice"></span>
+                                                        <legend class="pl-5" style="font-size: 14px; color: #7F8282">
+                                                            Invoice ID &#160;<input  name="idInvoice" id="idInvoice" disabled="disabled">
                                                         </legend>
-                                                        <legend class="pl-5" style="font-size: 16px; color: #7F8282">
-                                                            Employee &#160;<span style="color: black">backpanther</span>
+                                                        <legend class="pl-5" style="font-size: 14px; color: #7F8282">
+                                                            Employee &#160;<input th:value="${#authentication.getPrincipal().username}" name="employee" id="employee" disabled="disabled" >
                                                         </legend>
                                                        
                                                         <div class="form-group pl-2">
@@ -436,16 +475,7 @@ function deleteIn(idInvoice) {
                                                                             </thead>
                                                                            
                                                                             <tbody>
-                                                                            <tr>
-                                                                                <td class="dt-left" width="40%">
-                                                                                <span id="nameProduct"></span>    
-                                                                                </td>
-                                                                                <td class="dt-center" width="20%"><span id="quantity"></span></td>
-                                                                                <td class="dt-left" width="40%">$
-                                                                                   <span id="price"></span>
-                                                                                </td>
-                                                                                <td id="${message}"></td>
-                                                                            </tr>
+                                                                         
 
                                                                             </tbody>
 																	  <tfoot>
@@ -456,8 +486,8 @@ function deleteIn(idInvoice) {
                                                                                 </th>
                                                                                 
                                                                                 <th class="dt-left"
-                                                                                    style="font-size: 17px; color: black">
-                                                                                    $ 1850.5
+                                                                                    style="font-size: 17px; color: black" id="totalBill">
+                                                                                   
                                                                                 </th>
                                                                             </tr>
                                                                             </tfoot> 
@@ -477,9 +507,11 @@ function deleteIn(idInvoice) {
                                         </div>
                                     </div>
                                 </div>
-                                 <!-- The Modal -->
+                                 <!-- The Modal delete -->
   <div class="modal" id="deleteIn">
     <div class="modal-dialog">
+    <form th:action="@{/delete}" method="post" class="form"
+										role="form" th:object="${deletedInvoice}">
       <div class="modal-content">
       
         <!-- Modal Header -->
@@ -491,13 +523,12 @@ function deleteIn(idInvoice) {
         <!-- Modal body -->
         <div class="modal-body">
         <div class="form-group">
-									<form th:action="@{/createFeedback}" method="post" class="form"
-										role="form" th:object="${feedback}">
-
+									
+ 						<input  id="id" type="hidden" class="form-control "  th:field="*{id}">
 										<!-- Title report -->
 										<div class="row form-field">
-         <p class="col-sm-2">Name</p>
-         <input name="reason" id="reason" type="text" class="form-control col-sm-4" list="ed">
+         <p >Name</p>
+         <input  id="reason" type="text" class="form-control " list="ed" th:field="*{reason}">
 											<datalist id="ed">
 												<option value="Report selling goods"></option>
 												<option value="Report profit and lost"></option>
@@ -505,28 +536,25 @@ function deleteIn(idInvoice) {
 												<option value="Report sales overview"></option>
 												<option value="Report defective products"></option>
 											</datalist>
-											 <p class="col-sm-2">Status</p>
-         <input name="reason" id="reason" type="text" class="form-control col-sm-4" list="">
-											<datalist id="reason">
-												<option value="Active"></option>
-												<option value="Deactive"></option>
-											</datalist>
+										
 											</div>
+											<br>
 											<div class="row form-field">
 											<p>Description</p>
-											<textarea rows="5" cols="10" class="form-control"> </textarea>
+											<textarea rows="5" cols="10" class="form-control" th:field="*{description}"> </textarea>
 											</div>
 											
-											</form></div>
+											</div>
         </div>
         
         <!-- Modal footer -->
         <div class="modal-footer">
-          <a type="button" class="btn btn-danger" id="btnDelete" href="">Delete</a>
+          <button type="submit" class="btn btn-danger" id="btnDelete" href="">Delete</button>
            <a type="button" class="btn btn-default" data-dismiss="modal">Close</a>
         </div>
         
       </div>
+      </form>
     </div>
   </div>
                                 <!-- Modal edit -->
@@ -550,13 +578,13 @@ function deleteIn(idInvoice) {
                                                             INFO
                                                         </legend>
                                                         <legend class="pl-5" style="font-size: 14px; color: #7F8282">
-                                                            Invoice ID &#160;<input value="123456" name="idInvoice" id="idInvoice" disabled="disabled">
+                                                            Invoice ID &#160;<input  name="idInvoice" id="invoice" disabled="disabled">
                                                         </legend>
                                                         <legend class="pl-5" style="font-size: 14px; color: #7F8282">
                                                             Employee &#160;<input th:value="${#authentication.getPrincipal().username}" name="employee" id="employee" disabled="disabled" >
                                                         </legend>
                                                         <legend class="pl-5" style="font-size: 14px; color: #7F8282">
-                                                        Date create   <input type="date" style="border: solid 1px">
+                                                        Date create   <input type="date" id="date" style="border: solid 1px">
                                                         </legend>
 
                                                         <div class="pl-2">
@@ -578,7 +606,7 @@ function deleteIn(idInvoice) {
                                                                                 <th>Total invoice</th>
                                                                                 <th></th>
                                                                                 <th></th>
-                                                                                <th class="dt-right">$ 225.5</th>
+                                                                                <th class="dt-right" id="total"></th>
                                                                             </tr>
                                                                             </tfoot> 
                                                                             <tbody >
@@ -606,10 +634,10 @@ function deleteIn(idInvoice) {
                                                             RECEIPT
                                                         </legend>
                                                         <legend class="pl-3" style="font-size: 14px; color: #7F8282">
-                                                            Receipt ID &#160;<span style="color: black">123456</span>
+                                                            Receipt ID &#160;<span style="color: black" id="receiptId"></span>
                                                         </legend>
                                                         <legend class="pl-3" style="font-size: 14px; color: #7F8282">
-                                                            Customer &#160;<span style="color: black">scartless</span>
+                                                            Customer &#160;<textarea type="text" style="color: black;border: solid 1px;"   id="customer"></textarea>
                                                         </legend>
                                                         <div class="pl-3">
                                                             <textarea class="form-control" placeholder="Note.." style="font-size: 12px"></textarea>
@@ -654,6 +682,7 @@ function deleteIn(idInvoice) {
                                 <div class="modal fade"  tabindex="-1" role="dialog"
                                       aria-hidden="true" id="Unknow" >
                                     <div class="modal-dialog modal-lg" role="document">
+                                     <form class="form-group" th:action="@{/reportException}"  th:object="${invoice}" method="get" >
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title" id="infoTitleModalLabel" style="color: #19aa81">
@@ -669,9 +698,9 @@ function deleteIn(idInvoice) {
                                                     <div class="col-sm-12 container"><!--child-right-container-->
                                                         
                                                         <div class="form-group pl-2">
-                                                            <fieldset> <hr >
-                                                                <form class="form-group"  >
+                                                            <fieldset> 
                                                                     <div class="table-responsive col-sm-12">
+                                                               
                                                                         <table id="detail1-invoice-data-table"
                                                                                class="table table-borderless table-hover display nowrap"
                                                                                width="100%" cellspacing="0">
@@ -701,9 +730,9 @@ function deleteIn(idInvoice) {
                                                                                 </th>
                                                                             </tr>
                                                                             </tfoot> --> 
-                                                                        </table>
+                                                                        </table> 
                                                                     </div>
-                                                                </form>
+                                                               
                                                             </fieldset>
                                                         </div>
                                                     </div>
@@ -713,11 +742,12 @@ function deleteIn(idInvoice) {
                                                 <button type="button" class="dct-btn-outline-nobg" data-dismiss="modal">
                                                     Close
                                                 </button>
-                                                <button type="button" class="btn btn-success" >
-                                                    Save
+                                                <button type="submit" class="btn btn-success" >
+                                                    Create report
                                                 </button>
                                             </div>
                                         </div>
+                                        </form>
                                     </div>
                                 </div>
                             </fieldset>

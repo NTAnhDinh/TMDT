@@ -1,11 +1,17 @@
 package com.example.demo.model;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "feedback")
-public class Feedback {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Feedback implements Serializable{
 	@Id
+	@GeneratedValue
 	private int idFeedback;
 	private String title;
 	private int id_user;
@@ -13,20 +19,19 @@ public class Feedback {
 	@JoinColumn(name = "id_user", insertable = false, updatable = false)
 	private User user;
 	@Column(name = "receiver")
-	private String recevier;
+	private String receiver;
 	private String dateReport;
 	private String note;
 	private int status;
 	public Feedback() {
 	}
 
-	public Feedback(int idFeedback, String title, int id_user, String recevier, String dateReport, String note,
+	public Feedback( String title, int id_user, String receiver, String dateReport, String note,
 			int status) {
 		super();
-		this.idFeedback = idFeedback;
 		this.title = title;
 		this.id_user = id_user;
-		this.recevier = recevier;
+		this.receiver = receiver;
 		this.dateReport = dateReport;
 		this.note = note;
 		this.status = status;
@@ -58,11 +63,11 @@ public class Feedback {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public String getRecevier() {
-		return recevier;
+	public String getReceiver() {
+		return receiver;
 	}
-	public void setRecevier(String recevier) {
-		this.recevier = recevier;
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
 	public String getDateReport() {
 		return dateReport;
@@ -81,6 +86,13 @@ public class Feedback {
 	}
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "Feedback [idFeedback=" + idFeedback + ", title=" + title + ", id_user=" + id_user + ", user=" + user
+				+ ", recevier=" + receiver + ", dateReport=" + dateReport + ", note=" + note + ", status=" + status
+				+ "]";
 	}
 
 

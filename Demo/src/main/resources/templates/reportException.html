@@ -38,7 +38,7 @@
 
 
 <!-- Main CSS-->
-<link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+<link th:href="@{oss/css/theme.css}" rel="stylesheet" media="all">
 
 <link th:href="@{//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css}" rel="stylesheet" media="all">
 
@@ -88,30 +88,7 @@
   }
 }
     </style>
-<script>
-	//$(document).ready(
-		//	function() {
 
-			//	$.ajax({
-				//	type : "GET",
-				//	contentType : "application/json",
-				//	url : "http://localhost:8080/getRole",
-
-				//	dataType : 'json',
-
-				//	success : function(result) {
-
-				//		$.each(result, function(i, user) {
-					//		console.log(user.name);
-					//		var customer = "<option value="+user.name+" name=\"receiver\" id=\"receiver\">"
-						//			+ user.name + "</option>";
-						//	$("#exceptionsSe").append(customer);
-					//	});
-					//}
-				//});
-
-			//});
-</script>
 <script>
 	$(function() {
 		$("#inputNameproduct").autocomplete({
@@ -176,7 +153,7 @@ $('.table-add').click(function () {
 										<!-- Title report -->
 										<div class="row form-field">
 											<small class="col-sm-4" style="line-height: 57px;">Title
-												report</small> <input type="text" name="reportType" id="reportType"
+												report</small> <input type="text" th:field="*{reportType}" id="reportType"
 												class="form-control col-sm-8" list="report-kind-list">
 										<!-- 	<datalist id="reportType">
 												<option value="Report selling goods"></option>
@@ -198,17 +175,14 @@ $('.table-add').click(function () {
 										<div class="row form-field">
 											<small class="col-sm-4" style="line-height: 57px;">Date
 												report</small> 
-												<input type="date" name="date" id="date"
+												<input type="date" th:field="*{date}"  id="date"
 												class="form-control col-sm-8 glyphicon glyphicon-calendar">
 										</div>
 										<!-- Reveiver -->
 										<div class="row form-field">
 											<small class="col-sm-4" style="line-height: 57px;">Receiver</small>
-											<!-- <select id="exceptionsSe" class="form-control col-sm-8" name="exceptionsSe">
-
-											</select>-->
-											 <input name="exceptionsSe" class="form-control col-sm-8" type="text"
-                                                       list="categories" id="exceptionsSe">
+											 <input  class="form-control col-sm-8" type="text"
+                                                       list="categories" id="exceptionsSe" th:field="*{exceptionsSe}">
                                                 <datalist id="categories" >
                                                     <option th:each="user : ${listU}" th:value="${user.name}" th:text="${user.role.name}"></option>
                                                   
@@ -222,21 +196,20 @@ $('.table-add').click(function () {
 											<thead>
 												<tr>
 													<th>Product's name</th>
-													<th>Note</th>
+													<th>Request quantity</th>
 													<th>Remove
 													</th>
-													<th><button type="button" class="btn table-add" name="add" id="add">
-															<i class="fa fa-plus" aria-hidden="true" 
-																></i>
-														</button></th>
+													
 												</tr>
 											</thead>
 
 											<tbody >
-												<tr>
-													<td contentEditable="true">
+												<tr th:each="i : ${inDto}">
+													<td ><input type="text" th:value="${i.nameProduct}" readonly="readonly" name="nameProduct" >
 													</td>
-													<td contentEditable="true"></td>
+													<td  >
+													<input type="text" th:value="${i.quantity}" readonly="readonly" name="quantity" >
+													</td>
 													<td>
 														<button type="button" class="btn table-remove">
 															<i class="fa fa-times" aria-hidden="true"></i>

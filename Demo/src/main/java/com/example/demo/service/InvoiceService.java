@@ -1,17 +1,16 @@
 package com.example.demo.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Invoice;
-import com.example.demo.model.InvoiceDetail;
-import com.example.demo.repository.InvoiceDetailRepository;
 import com.example.demo.repository.InvoiceRepository;
 
 @Service
@@ -30,20 +29,10 @@ public class InvoiceService {
 		return invoiceRepository.getOne(idIn);
 	}
 
-	public List<Invoice> findAll() {
-		return invoiceRepository.findAll();
+	public Page<Invoice> findAll(int page) {
+		return invoiceRepository.findAll(PageRequest.of(page,5,Sort.by(Sort.Direction.ASC,"idInvoice")));
 	}
 
-//	public int countInvoice() {
-//		return invoiceRepository.countInvoice();
-//	}
-
-//	public void adjustInvoice(String idInvoice) {
-//
-//		invoiceRepository.deleteDetail(idInvoice);
-////			invoiceRepository.updateStatus(1, idInvoice);// trang thai da dieu chinh
-//
-//	}
 
 	public void delete(String idInvoice, int status) {
 		Invoice invoice = invoiceRepository.getOne(idInvoice);
@@ -54,14 +43,14 @@ public class InvoiceService {
 	public String randomId(int limit, String ngay) {
 		String id = "IV";
 		Random r = new Random();
-		List<Invoice> listIn = findAll();
+		List<Invoice> listIn = invoiceRepository.findAll();
 		int stt = r.nextInt(limit);
 		int count = 0;
 		while (count != listIn.size() || stt == 0) {
 			stt = r.nextInt(limit);
 			count = 0;
 			for (int i = 0; i < listIn.size(); i++) {
-				if (Integer.parseInt(listIn.get(i).getIdInvoice().substring(6, 9).trim()) == stt) {
+				if (Integer.parseInt(listIn.get(i).getIdInvoice().substring(6, 10).trim()) == stt) {
 					break;
 				} else {
 					count++;
@@ -97,8 +86,25 @@ public class InvoiceService {
 		return l;
 	}
 
-	public static void main(String[] args) {
-		System.out.println();
+	public int getQuantityInvoice() {
+		return invoiceRepository.getInvoiceInDay();
+
 	}
+	public long getSumMoney() {
+		
+		return invoiceRepository.getSumMoneyInDay();
+
+	}
+	
+	public int getDeletedInvoice() {
+		return invoiceRepository.getDeletedInvoice();
+
+	}
+	
+	public int getItemReturned() {
+		return invoiceRepository.getItemReturned();
+
+	}
+
 
 }

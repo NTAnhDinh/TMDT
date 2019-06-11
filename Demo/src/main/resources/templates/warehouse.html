@@ -26,7 +26,7 @@
     <link th:href="@{/vendor/datatables/css/fixedColumns.bootstrap4.min.css}" rel="stylesheet" media="all">
 
     <!-- Main CSS-->
-    <link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+    <link th:href="@{oss/css/theme.css}" rel="stylesheet" media="all">
     <link th:href="@{/css/hover-min.css}" rel="stylesheet" media="all">
 
     <!-- JQuery JS -->
@@ -93,7 +93,7 @@
 <div class="page-wrapper">
     <!-- MENU SIDEBAR-->
     <aside class="menu-frame">
-        <iframe src="sidebar/sidebarSale.jsp" frameborder="0" height="100%"></iframe>
+        <iframe th:src="@{/InvenManager}"  frameborder="0" height="100%"></iframe>
     </aside>
     <!-- END MENU SIDEBAR-->
 
@@ -144,7 +144,7 @@
                                                 
                                                 <td th:text=${ware.defectedNumber}></td>
                                                      <td >
-                                                    <span th:if="${ware.numberInventory}<=20"><i class="fa fa-exclamation-triangle" style="color: red"></i></span>
+                                                    <span th:if="${ware.numberInventory}<=20"><i class="fa fa-exclamation-triangle" style="color: red" data-toggle="tooltip" title="Hooray!"></i></span>
                                               <span th:unless="${ware.numberInventory}>20"></span>
                                                <i class="fa fa-plus" style="margin-left: 10px"></i></td>
                                               
@@ -154,6 +154,25 @@
                                             </tbody>
 
                                         </table>
+                                        	<div class="row" >
+							<ul class="pagination">
+						<li
+							th:class="${currentIndex == 1}? 'page-item disabled' : 'page-item'">
+							<a class="page-link"  th:href="@{/warehouse?p={i}(i=${currentIndex})}">First</a>
+						</li>
+				<li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+					th:class="${item == currentIndex ? 'page-item active' :'page-item' }">
+					<a class="page-link"  th:href="@{/warehouse?p={i}(i=${item})}"> <span
+						th:text='${item}'>1</span>
+				</a>
+				</li>
+			
+					<li
+						th:class="${currentIndex == totalPage}? 'page-item disabled':'page-item'">
+						<a class="page-link" th:href="@{/warehouse?p={i}(i=${totalPage})}">Last</a>
+					</li>
+				</ul>
+							</div>
                                     </div>
                                 </form>
                             </fieldset>
@@ -164,9 +183,18 @@
         </div>
     </div>
 </div>
+	<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         var table = $('#inven-data-table').DataTable({
+        	searching : true,
+			length : false,
+			paging:false,
+			info:false,
             initComplete: function () {
                 this.api().columns().every(function () {
                     var column = this;

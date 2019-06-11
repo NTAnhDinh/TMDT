@@ -6,26 +6,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class MainController {
-	@GetMapping("/")
-	public String index() {
-		return "index";
-	}
-
 	
-//	@GetMapping("/warehouse")
-//	public String statusInventorySale() {
-//		return "warehouse";
-//	}
-
+	
+	
+	
 	@GetMapping("/login")
-	public String loginSucees(String login) {
+	public String loginSucees() {
 
 		return "login";
 	}
 
-	@GetMapping("/createbill")
-	public String createBill() {
-		return "createbill";
+	@GetMapping("/logout")
+	public String logout() {
+
+		return "redirect:/login";
 	}
 
 
@@ -35,32 +29,32 @@ public class MainController {
 		return "InventoryTrends";
 	}
 
-	@GetMapping("/template")
-	public String template() {
-		return "template";
-	}
+	
 
-	@GetMapping("/I1")
+	@GetMapping("/InvenManager")
 	public String I1() {
 		return "sidebar/InvenManager";
 	}
 
 
 
-	@GetMapping("/I3")
-	public String I3() {
-		return "sidebar/SaleMana";
-	}
+//	@GetMapping("/SaleMana")
+//	public String I3() {
+//		return "sidebar/SaleMana";
+//	}
 
-	@GetMapping("/I4")
-	public String I4() {
+//	@GetMapping("/sidebarAdmin")
+//	public String I4() {
+//		return "sidebar/sidebarAdmin";
+//	}
+	@GetMapping("/sidebar/admin")
+	public String a() {
 		return "sidebar/sidebarAdmin";
 	}
-
 	@GetMapping("/sale")
 	public String sale() {
 
-		return "sale2";
+		return "sidebar/sale";
 	}
 	
 }

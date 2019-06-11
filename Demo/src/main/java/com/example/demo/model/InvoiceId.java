@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Embeddable
 public class InvoiceId implements Serializable{
@@ -11,6 +13,7 @@ public class InvoiceId implements Serializable{
 	private String idInvoice;
 	@Column(name="id_product")
 	private String idProduct;
+	
 	public InvoiceId() {
 	}
 	public InvoiceId(String idInvoice, String idProduct) {

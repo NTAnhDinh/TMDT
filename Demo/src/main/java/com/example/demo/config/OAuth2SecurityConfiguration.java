@@ -40,6 +40,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 //import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.sql.DataSource;
@@ -65,7 +66,7 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
     	.and().csrf().disable().authorizeRequests()
         .antMatchers(
                 "/js/**",
-                "/css/**",
+                "/css/**", "/oss/**","/sidebar/**",
                 "/imgs/**",  "/fonts/**","/static/**",
                 "/vendor/**").permitAll()
                 .anyRequest().authenticated()
@@ -75,7 +76,9 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutSuccessUrl("/login").permitAll()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
 
         ;
 

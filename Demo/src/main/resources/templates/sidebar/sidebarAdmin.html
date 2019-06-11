@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Sidebar-admin</title>
@@ -22,7 +23,7 @@
     <link href="../vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
 
     <!-- Main CSS-->
-    <link href="../css/sidebar.css" rel="stylesheet" media="all">
+    <link href="../oss/css/sidebar.css" rel="stylesheet" media="all">
 
     <!-- Bootstrap JS -->
     <script src="../vendor/bootstrap-4.1/js/bootstrap.min.js"></script>
@@ -49,20 +50,20 @@
         <nav class="navbar-sidebar">
             <ul class="list-unstyled navbar__list">
                 <li class="active ">
-                    <a class="js-arrow" href="#">
+                    <a class="js-arrow" th:href="@{/}">
                         <i class="fas fa-tachometer-alt"></i>Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="chart.html"> <i class="fas fa-chart-bar"></i>Stock
+                    <a th:href="@{/stockAdmin}"> <i class="fas fa-chart-bar"></i>Stock
                     </a>
                 </li>
                 <li>
-                    <a href="table.html"> <i class="fas fa-users"></i>Employees
+                    <a th:href="@{/employee}"> <i class="fas fa-users"></i>Employees
                     </a>
                 </li>
                 <li>
-                    <a href="table.html"> <i class="fas fa-sign-out"></i>Sign out
+                    <a th:href="@{/logout}"> <i class="fas fa-sign-out"></i>Sign out
                     </a>
                 </li>
             </ul>

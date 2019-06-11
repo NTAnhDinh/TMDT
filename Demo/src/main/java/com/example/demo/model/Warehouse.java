@@ -22,20 +22,22 @@ public class Warehouse {
 	private int defectedNumber;
 	private int soldedNumber;
 	private String dateUpdate;
+private int status;
+	
+
 
 	public Warehouse(WarehouseId id, Product product, double realPrice, int numberInventory, int defectedNumber,
-			int soldedNumber, String dateUpdate) {
-		super();
-		this.id = id;
-		this.product = product;
-		this.realPrice = realPrice;
-		this.numberInventory = numberInventory;
-		this.defectedNumber = defectedNumber;
-		this.soldedNumber = soldedNumber;
-		this.dateUpdate = dateUpdate;
-	}
-
-
+		int soldedNumber, String dateUpdate, int status) {
+	super();
+	this.id = id;
+	this.product = product;
+	this.realPrice = realPrice;
+	this.numberInventory = numberInventory;
+	this.defectedNumber = defectedNumber;
+	this.soldedNumber = soldedNumber;
+	this.dateUpdate = dateUpdate;
+	this.status = status;
+}
 
 	public Warehouse() {
 	}
@@ -45,6 +47,14 @@ public class Warehouse {
 
 
 
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	public WarehouseId getId() {
 		return id;

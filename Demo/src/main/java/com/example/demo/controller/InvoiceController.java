@@ -2,10 +2,14 @@ package com.example.demo.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +25,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.config.UserDetail;
+import com.example.demo.config.UserDetailService;
+import com.example.demo.model.DeletedInvoice;
+import com.example.demo.dto.DelInvoice;
+import com.example.demo.dto.EmployeeDto;
+import com.example.demo.dto.FeedbackDto;
 import com.example.demo.dto.InvoiceDto;
 //import saleinventory.management.system.config.UserDetailService;
 import com.example.demo.model.*;
+import com.example.demo.service.CategoryService;
+import com.example.demo.service.DelInvoiceService;
 import com.example.demo.service.InvoiceDetailService;
 import com.example.demo.service.InvoiceService;
 import com.example.demo.service.ReceiptService;
@@ -39,80 +50,109 @@ public class InvoiceController {
 	@Autowired
 	InvoiceDetailService invoiceDetailService;
 	@Autowired
-	UserService userService;
+	UserDetailService userService;
 	@Autowired
 	WarehouseService wareService;
-	static ArrayList<InvoiceDto> listProduct = new ArrayList<>();
-	static long totalBill = 0;
+	@Autowired
+	DelInvoiceService delSer;
 
-	@ModelAttribute("bill")
-	public InvoiceDto createBill() {
-		return new InvoiceDto();
+	static ArrayList<InvoiceDto> listProduct = new ArrayList<>();
+
+	@GetMapping("/createbill")
+	public String createBill(Model model) {
+		model.addAttribute("bill", new InvoiceDto());
+		
+		
+		listProduct.removeAll(listProduct);
+		return "createbill";
 	}
 
 	@GetMapping("/invoicesSale")
-	public String historyWarehouse(Model modal) {
-		List<Invoice> l = invoiceService.findAll();
-
-		modal.addAttribute("listInvoi", l);
+	public String historyWarehouse(Model model, HttpServletRequest request) {
+		int page = 0;
+		if (request.getParameter("p") != null && !request.getParameter("p").isEmpty()) {
+			page = Integer.parseInt(request.getParameter("p")) - 1;
+		}
+		if (!model.containsAttribute("deletedInvoice")) {
+			model.addAttribute("deletedInvoice", new DelInvoice());
+		}
+		Page<Invoice> l = invoiceService.findAll(page);
+		int totalPage = l.getTotalPages();
+		int begin = Math.max(1, (page + 1) - totalPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("currentIndex", l.getNumber() + 1);
+		model.addAttribute("beginIndex", begin);
+		model.addAttribute("endIndex", Math.min(begin + 5, totalPage));
+		model.addAttribute("listInvoi", l);
 		return "invoicesSale";
 	}
 
 	@RequestMapping("/getInvoices")
 	@ResponseBody
-	public List<InvoiceDetail> getInvoices(Model modal, @RequestParam("idInvoice") String idInvoice) {
+	public List<Object> getInvoices(Model modal, @RequestParam("idInvoice") String idInvoice) {
 		List<InvoiceDetail> ld = invoiceDetailService.getById(idInvoice);
+		Invoice iv = invoiceService.getOne(idInvoice);
 		System.out.println(idInvoice);
-		modal.addAttribute("ld", ld);
-		return ld;
+		List<Object> objs = new ArrayList<>();
+		objs.add(ld);
+		objs.add(iv.getStatus());
+		return objs;
 	}
 
 	@PostMapping("/createInvoice")
-	public String exportInvoice(@ModelAttribute("bill") List<InvoiceDto> iDto, Model model) {
-System.out.println("CTHD "+iDto.toString()+" "+ iDto.size());
-//		long price = Long.parseLong(iDto.getPrice().trim());
-//
-//		int update = 0;
-//		if (listProduct.size() > 0) {
-//			for (int i = 0; i < listProduct.size(); i++) {
-//				if (iDto.getIdProduct().trim().equals(listProduct.get(i).getIdProduct().trim())) {
-//					listProduct.get(i).setQuantity((Integer.parseInt(listProduct.get(i).getQuantity().trim())
-//							+ Integer.parseInt(iDto.getQuantity().trim())) + " ");
-//					listProduct.get(i)
-//							.setTotal((price * Integer.parseInt(listProduct.get(i).getQuantity().trim())) + " ");
-//					update = 1;
-//					break;
-//				}
-//			}
-//		} else {
-//			iDto.setTotal((price * Integer.parseInt(iDto.getQuantity().trim())) + " ");
-//			listProduct.add(iDto);
-//			update = 1;
-//		}
-//		if (update == 0) {
-//			listProduct.add(iDto);update = 1;
-//		}
+	public String exportInvoice(@ModelAttribute("bill") InvoiceDto iDto, Model model) {
+		long totalBill = 0;
+		System.out.println("CTHD " + iDto.toString() + " ");
+		long price = Long.parseLong(iDto.getPrice().trim());
+
+		int update = 0;
+		if (listProduct.size() > 0) {
+			for (int i = 0; i < listProduct.size(); i++) {
+				System.out.println("step " + iDto.getIdProduct() + " " + listProduct.get(i).getIdProduct());
+				if (iDto.getIdProduct().trim().equals(listProduct.get(i).getIdProduct().trim())) {
+
+					int newQuan = (Integer.parseInt(listProduct.get(i).getQuantity().trim())
+							+ Integer.parseInt(iDto.getQuantity().trim()));
+					listProduct.get(i).setQuantity(newQuan + " ");
+					listProduct.get(i).setTotal((price * newQuan) + " ");
+					break;
+				} else {
+					update++;
+				}
+			}
+			if (update == listProduct.size()) {
+				iDto.setTotal((price * Integer.parseInt(iDto.getQuantity().trim())) + " ");
+				listProduct.add(iDto);
+			}
+		} else {
+			iDto.setTotal((price * Integer.parseInt(iDto.getQuantity().trim())) + " ");
+			listProduct.add(iDto);
+		}
 
 		for (InvoiceDto invoiceDto : listProduct) {
 			totalBill += Long.parseLong(invoiceDto.getTotal().trim());
 		}
-		System.out.println(listProduct.size());
+		System.out.println("listProduct " + listProduct.size());
 		model.addAttribute("listProduct", listProduct);
 		model.addAttribute("totalBill", totalBill);
-		return "redirect:/createbill";
+		return "createbill";
 	}
 
-	@GetMapping("/saveInvoice")
-	public String save(Authentication authenticaton) {
+	@PostMapping("/saveInvoice")
+	public String save(Authentication authenticaton, Model model) {
+		// get info of user
 		UserDetail user = (UserDetail) authenticaton.getPrincipal();
 		User u = userService.findByName(user.getUsername());
+		// get date current
+		Date date = Calendar.getInstance().getTime();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
+		String day = dateFormat.format(date);
+		day = day.trim();
 		long money = 0;
 		for (InvoiceDto invoiceDto : listProduct) {
 			money += Long.parseLong(invoiceDto.getTotal().trim());
 		}
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy ");
-		Date date = new Date();
-		Invoice invoice = new Invoice("12", u.getId_user(), money, 0, 0, formatter.format(date), 1);
+		Invoice invoice = new Invoice(invoiceService.randomId(3000, day), u.getId_user(), money, 0, 0, day, 1);
 		invoiceService.addInvoice(invoice);
 		for (InvoiceDto invoiceDto : listProduct) {
 			InvoiceDetail iDetail = new InvoiceDetail(new InvoiceId(invoice.getIdInvoice(), invoiceDto.getIdProduct()),
@@ -120,19 +160,24 @@ System.out.println("CTHD "+iDto.toString()+" "+ iDto.size());
 			System.out.println(iDetail.toString());
 			invoiceDetailService.addInvoiceDetail(iDetail);
 		}
+		model.addAttribute("bill", new InvoiceDto());
+		listProduct = null;
 		return "createbill";
 	}
 
-	@PutMapping("/edit")
-	public void adjustInvoice(@RequestParam("idInvoice") String idInvoice) {
-//		invoiceService.addInvoice(in);
-//		receiptService.save(r);
 
-	}
 
-	@GetMapping("/delete")
-	public String deleteInvoice(@RequestParam("idInvoice") String idInvoice) {
-		invoiceService.delete(idInvoice, 4);
+	@PostMapping("/delete")
+	public String deleteInvoice(@ModelAttribute("deletedInvoice") DelInvoice deDto) {
+		// get date current
+		Date date = Calendar.getInstance().getTime();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
+		String day = dateFormat.format(date);
+		day = day.trim();
+		System.out.println("DELETE "+ deDto.toString());
+		DeletedInvoice d = new DeletedInvoice(deDto.getId(), deDto.getReason(),  day);
+		delSer.save(d);
+		invoiceService.delete(d.getId(), 4);
 		return "redirect:/invoicesSale";
 	}
 
@@ -140,28 +185,33 @@ System.out.println("CTHD "+iDto.toString()+" "+ iDto.size());
 	@ResponseBody
 	public int pending(Model model, @RequestParam("idWare") int idWare, @RequestParam("idProduct") String idProduct,
 			@RequestParam("q") int quantity, @RequestParam("inv") String idInvoice) {
-		List<InvoiceDetail> ld = invoiceDetailService.getById(idInvoice);
-		System.out.println("dinh "+ idWare+" "+ idProduct+" "+ quantity+" "+ idInvoice);
-		int mess=wareService.buyProduct(new WarehouseId(idWare, idProduct), quantity, idInvoice);
-		System.out.println("server "+ mess);
-		int d = 0;
-		for (InvoiceDetail invoiceDetail : ld) {
-			if (invoiceDetail.getStatus() == 0) {
-				d++;
+		if (!model.containsAttribute("invoice")) {
+			model.addAttribute("invoice", new InvoiceDto());
+		}
+		Invoice iv = invoiceService.getOne(idInvoice);
+		int mess = wareService.buyProduct(new WarehouseId(idWare, idProduct), quantity, idInvoice);
+		if (iv.getStatus() == 0) {// trang thai hoa don chua dc duyet
+
+			List<InvoiceDetail> ld = invoiceDetailService.getById(idInvoice);
+			int d = 0;
+			for (InvoiceDetail invoiceDetail : ld) {
+				if (invoiceDetail.getStatus() == 0) {
+					d++;
+				}
 			}
-		}
-		System.out.println("dem"+d);
-		if (d == 0) {
-			Invoice iv = invoiceService.getOne(idInvoice);
-			iv.setStatus(3);
+			System.out.println("dem" + d);
+			if (d == 0 && mess == 0) {
+
+				iv.setStatus(3);
+			} else {
+				iv.setStatus(0);
+			}
 			invoiceService.addInvoice(iv);
-		}else {
-			Invoice iv = invoiceService.getOne(idInvoice);
-			iv.setStatus(0);
-			invoiceService.addInvoice(iv);
+
 		}
-//		model.addAttribute("mess", mess);
 		return mess;
 
 	}
+
+
 }

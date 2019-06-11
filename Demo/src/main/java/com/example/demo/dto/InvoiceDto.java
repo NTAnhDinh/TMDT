@@ -6,7 +6,7 @@ String quantity;
 String idProduct;
 String price;
 String total;
-
+String status;
 public InvoiceDto(String nameProduct, String quantity, String idProduct, String price, String total) {
 	super();
 	this.nameProduct = nameProduct;
@@ -15,11 +15,10 @@ public InvoiceDto(String nameProduct, String quantity, String idProduct, String 
 	this.price = price;
 	this.total = total;
 }
-public InvoiceDto(String nameProduct, String quantity, String price) {
+public InvoiceDto(String nameProduct, String quantity) {
 	super();
 	this.nameProduct = nameProduct;
 	this.quantity = quantity;
-	this.price = price;
 }
 public InvoiceDto() {
 	// TODO Auto-generated constructor stub
@@ -56,8 +55,7 @@ public void setTotal(String total) {
 }
 @Override
 public String toString() {
-	return "InvoiceDto [nameProduct=" + nameProduct + ", quantity=" + quantity + ", idProduct=" + idProduct + ", price="
-			+ price + ", total=" + total + "]";
+	return "InvoiceDto [nameProduct=" + nameProduct + ", quantity=" + quantity + "-"+status+"]";
 }
 
 }

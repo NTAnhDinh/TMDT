@@ -3,6 +3,10 @@ package com.example.demo.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
+
+import org.springframework.web.multipart.MultipartFile;
+
 
 @Entity
 @Table(name = "product")
@@ -19,8 +23,11 @@ public class Product implements Serializable {
 	private String supplier;
 	private long price;
 	private int tag;
+	String myfile;
+
 	
-	public Product(String idProduct, String idCategory, String nameProduct, String supplier, long price, int tag) {
+	public Product(String idProduct, String idCategory, String nameProduct,
+			String supplier, long price, int tag) {
 		super();
 		this.idProduct = idProduct;
 		this.idCategory = idCategory;
@@ -87,6 +94,14 @@ public class Product implements Serializable {
 
 	public void setIdCategory(String idCategory) {
 		this.idCategory = idCategory;
+	}
+
+	public String getMyfile() {
+		return myfile;
+	}
+
+	public void setMyfile(String myfile) {
+		this.myfile = myfile;
 	}
 
 	@Override

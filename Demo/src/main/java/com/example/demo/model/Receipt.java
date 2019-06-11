@@ -14,15 +14,19 @@ private String nameCustomer;
 private String phoneNumber;
 private String description;
 private double total_Paid;
+private String date;
 
-public Receipt(int id,String idInvoice, String nameCustomer, String phoneNumber, String description, double total_Paid) {
+
+public Receipt(int id, String idInvoice, String nameCustomer, String phoneNumber, String description, double total_Paid,
+		String date) {
 	super();
-	this.id=id;
+	this.id = id;
 	this.idInvoice = idInvoice;
 	this.nameCustomer = nameCustomer;
 	this.phoneNumber = phoneNumber;
 	this.description = description;
 	this.total_Paid = total_Paid;
+	this.date = date;
 }
 public Receipt() {
 }
@@ -61,6 +65,18 @@ public double getTotal_Paid() {
 }
 public void setTotal_Paid(double total_Paid) {
 	this.total_Paid = total_Paid;
+}
+public int getId() {
+	return id;
+}
+public void setId(int id) {
+	this.id = id;
+}
+public String getDate() {
+	return date;
+}
+public void setDate(String date) {
+	this.date = date;
 }
 
 }

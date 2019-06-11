@@ -7,7 +7,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="receiptdetail")
+@Table(name="receipt_detail")
 public class ReceiptDetail {
 
 	@Id

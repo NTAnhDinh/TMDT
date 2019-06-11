@@ -13,65 +13,69 @@ import java.util.*;
 
 public class UserDetail implements UserDetails {
 
-    private Collection<? extends GrantedAuthority> authorities;
-    private String password;
-    private String username;
+	private Collection<? extends GrantedAuthority> authorities;
+	private String password;
+	private String username;
 
-    public UserDetail(User user) {
-        this.username = user.getName();
-        this.password =user.getPassword();
+	public UserDetail() {
+	}
 
-        this.authorities = translate(user);
-    }
-    private Collection<? extends GrantedAuthority> translate(User user) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        String name = user.getRole().getName().toUpperCase();
-        System.out.println(name);
-        if (!name.startsWith("ROLE_")) {
-            name = "ROLE_" + name;
-        }
-        authorities.add(new SimpleGrantedAuthority(name));
-        return authorities;
-    }
+	public UserDetail(User user) {
+		this.username = user.getName();
+		this.password = user.getPassword();
 
-    @Override
-    public String toString() {
-        return "UserDetail [authorities=" + authorities + ", password=" + password + ", username=" + username + "]";
-    }
+		this.authorities = translate(user);
+	}
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	private Collection<? extends GrantedAuthority> translate(User user) {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		String name = user.getRole().getName().toUpperCase();
+		System.out.println(name);
+		if (!name.startsWith("ROLE_")) {
+			name = "ROLE_" + name;
+		}
+		authorities.add(new SimpleGrantedAuthority(name));
+		return authorities;
+	}
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
+	@Override
+	public String toString() {
+		return "UserDetail [authorities=" + authorities + ", password=" + password + ", username=" + username + "]";
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	@Override
+	public String getUsername() {
+		return username;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 
 }

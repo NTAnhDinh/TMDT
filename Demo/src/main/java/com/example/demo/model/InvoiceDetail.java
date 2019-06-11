@@ -9,25 +9,26 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "invoice_detail")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class InvoiceDetail implements Serializable {
 	@EmbeddedId
 	private InvoiceId id;
-	
+
 	@OneToOne
 	@JoinColumn(name = "id_product", insertable = false, updatable = false)
-	
 	private Product product;
-	
+	@Column(name = "quantity")
 	private int quantity;
 	private long price;
-private int status;
+	private int status;
+
+	@ManyToOne
+	@JoinColumn(name = "id_invoice", insertable = false, updatable = false)
+	Invoice invoice;
 	public InvoiceDetail() {
 	}
 
-	
-
-	public InvoiceDetail(InvoiceId id,  int quantity, long price, int status) {
+	public InvoiceDetail(InvoiceId id, int quantity, long price, int status) {
 		super();
 		this.id = id;
 		this.quantity = quantity;
@@ -35,22 +36,21 @@ private int status;
 		this.status = status;
 	}
 
+	public String getIdInvoice() {
+		return id.getIdInvoice();
+	}
 
-
-
-
+	public String getIdProduct() {
+		return id.getIdProduct();
+	}
 
 	public InvoiceId getId() {
 		return id;
 	}
 
-
-
 	public void setId(InvoiceId id) {
 		this.id = id;
 	}
-
-
 
 	public InvoiceDetail(InvoiceId id, Product product, int quantity, long price, int status) {
 		super();
@@ -61,30 +61,14 @@ private int status;
 		this.status = status;
 	}
 
-
-
-
-
-
-
-
 	public int getStatus() {
 		return status;
 	}
-
-
-
-
 
 	public void setStatus(int status) {
 		this.status = status;
 	}
 
-
-
-
-
-	
 	public Product getProduct() {
 		return product;
 	}
@@ -117,17 +101,10 @@ private int status;
 		this.price = price;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "InvoiceDetail [id=" + id + ", product=" + product + ", quantity=" + quantity + ", price=" + price
 				+ ", status=" + status + "]";
 	}
-
-
-	
-
-	
 
 }

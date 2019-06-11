@@ -35,7 +35,7 @@
 	rel="stylesheet" media="all">
 
 <!-- Main CSS-->
-<link th:href="@{/css/theme.css}" rel="stylesheet" media="all">
+<link th:href="@{oss/css/theme.css}" rel="stylesheet" media="all">
 <link th:href="@{/css/hover-min.css}" rel="stylesheet" media="all">
 <!-- JQuery JS -->
 <script th:src="@{/vendor/jquery-ui.min.js}" type="text/javascript"></script>
@@ -84,22 +84,9 @@ div.dataTables_wrapper div.dataTables_info {
 	font-size: 14px;
 }
 </style>
-<script>
 
 
-$('#search1').on('click', function(evt) {
-	$.ajax({
-		type : "POST",
-		url : "http://localhost:8080//searchProduct2?idInvoice="+idInvoice,
-		dataType : 'json',
 
-		success : function(ld) {
-			for()
-			}
-	})
-  })
-
-</script>
 
 </head>
 <body class="animsition1">
@@ -108,7 +95,7 @@ $('#search1').on('click', function(evt) {
 
 		<!-- MENU SIDEBAR-->
 		<aside class="menu-frame">
-			<iframe th:src="@{/sale}" frameborder="0" height="100%"></iframe>
+			<iframe th:src="@{/sidebarAdmin}" frameborder="0" height="100%"></iframe>
 		</aside>
 		<!-- END MENU SIDEBAR-->
 
@@ -142,7 +129,7 @@ $('#search1').on('click', function(evt) {
 									<fieldset>
 										<form class="form-group">
 										
-										<div class="row container">
+									<!--  	<div class="row container">
 											<div class="col-sm-6"></div>
 											<div class="col-sm-6 row form-field input-group-btn">
 												<input class="col-sm-11 form-control dt-right " type="text"
@@ -151,7 +138,7 @@ $('#search1').on('click', function(evt) {
 													<i class="fa fa-search"></i>
 												</button>
 											</div>
-										</div>
+										</div>-->
 										
 											
 											<div class="table-responsive col-sm-12">
@@ -184,35 +171,23 @@ $('#search1').on('click', function(evt) {
 													</tbody>
 												</table>
 							<div class="row" >
-												<ul class="pagination">
-			<li
-				th:class="${currentIndex == 1}? 'page-item disabled' : 'page-item'">
-				<a class="page-link" th:href="@{|@{http:/localhost:8080/getListProduct?p=}${currentIndex - 1}|}">First</a>
-			</li>
-			<li
-				th:class="${currentIndex == 1}? 'page-item disabled': 'page-item' ">
-				<a class="page-link" aria-label="Previous"
-				th:href="@{|@{http:/localhost:8080/getListProduct?p=}${currentIndex - 1}|}"
-				title='Go to previous page'><span aria-hidden="true">«</span>
-					<span class="sr-only">Previous</span></a>
-			</li>
-			<li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
-				th:class="${item == currentIndex ? 'page-item active' :'page-item' }">
-				<a class="page-link" th:href="@{|@{http:/localhost:8080/getListProduct?p=}${item}|}"> <span
-					th:text='${item}'>1</span>
-			</a>
-			</li>
-			<li
-				th:class="${currentIndex == totalPage}? 'page-item disabled': 'page-item'">
-				<a class="page-link" aria-label="Next"
-				th:href="@{|${http:/localhost:8080/getListProduct?p=}${currentIndex + 1}|}" title='Go to next page'><span
-					aria-hidden="true">»</span> <span class="sr-only">Next</span></a>
-			</li>
-			<li
-				th:class="${currentIndex == totalPage}? 'page-item disabled':'page-item'">
-				<a class="page-link" th:href="@{|${http:/localhost:8080/getListProduct?p=}${totalPage}|}">Last</a>
-			</li>
-		</ul>
+							<ul class="pagination">
+						<li
+							th:class="${currentIndex == 1}? 'page-item disabled' : 'page-item'">
+							<a class="page-link"  th:href="@{/stockAdmin?p={i}(i=${currentIndex})}">First</a>
+						</li>
+				<li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+					th:class="${item == currentIndex ? 'page-item active' :'page-item' }">
+					<a class="page-link"  th:href="@{/stockAdmin?p={i}(i=${item})}"> <span
+						th:text='${item}'>1</span>
+				</a>
+				</li>
+			
+					<li
+						th:class="${currentIndex == totalPage}? 'page-item disabled':'page-item'">
+						<a class="page-link" th:href="@{/stockAdmin?p={i}(i=${totalPage})}">Last</a>
+					</li>
+				</ul>
 							</div>
 												<!-- Modal edit price of product -->
 												<div class="modal modal-default fade in" id="edit">
@@ -250,7 +225,7 @@ $('#search1').on('click', function(evt) {
 																		<h4 class="col-sm-4" style="line-height: 57px;">New
 																			price :</h4>
 																		<input name="nPrice" class="form-control col-sm-8"
-																			type="number" id="nPrice">
+																			type="number" id="nPrice" value="0">
 																	</div>
 
 																	<a type="submit" class="btn" id="confirm" href=""
@@ -286,39 +261,43 @@ $('#search1').on('click', function(evt) {
 
 
 												<!-- Name product -->
-												<div class="row form-field">
+												<div class="row form-field"  >
 													<small class="col-sm-4" style="line-height: 57px;">Name
-														product</small> <input name="productName"
-														class="form-control col-sm-8" type="text" id="productName">
-												</div>
+														product</small> <input  class="form-control col-sm-8" type="text"  th:field="*{productName}"  >
+													</div>
+														 <span th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}" th:style="'color:red'"></span>	
+											
 												<!-- Category -->
-												<div class="row form-field">
+												<div class="row form-field" >
 													<small class="col-sm-4" style="line-height: 57px;">Category</small>
-													<input name="category" class="form-control col-sm-8"
-														type="text" list="categories" id="category">
-													<datalist id="categories">
+													<input class="form-control col-sm-8"
+														type="number" list="categories"  th:field="*{category}" value="1">
+															<datalist id="categories">
 														<option th:each="cateProduct : ${listCate}"
 															th:value="${cateProduct.idCategory}"
 															th:text="${cateProduct.name}"></option>
 
 													</datalist>
 												</div>
+													 <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}" th:style="'color:red'"></span>	
+											
 												<!-- Supplier -->
-												<div class="row form-field">
+												<div class="row form-field" >
 													<small class="col-sm-4" style="line-height: 57px;">Supplier</small>
-													<input name="suppliers" class="form-control col-sm-8"
-														type="text" list="suppliers" id="suppliers">
-
+													<input  class="form-control col-sm-8"
+														type="text" list="suppliers"  th:field="*{suppliers}">
+	 											
 												</div>
+												<span th:if="${#fields.hasErrors('suppliers')}" th:errors="*{suppliers}" th:style="'color:red'"></span>	
+												
 												<!-- Price per item -->
-												<div class="row form-field">
+												<div class="row form-field" >
 													<small class="col-sm-4" style="line-height: 57px;">Price</small>
-													<input name="price" class="form-control col-sm-8"
-														type="number" id="price" value="0">
+													<input  class="form-control col-sm-8"
+														type="number"  value="0" th:field="*{price}">
+														
 												</div>
-
-
-
+									<span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" th:style="'color:red'"></span>	
 											</div>
 
 										</div>
@@ -338,10 +317,9 @@ $('#search1').on('click', function(evt) {
 														<button class="benestudio-btn">
 															<span>Upload a file</span>
 														</button>
-														<input type="file" name="myfile" id="myfile" />
-
+														<input type="file" th:field="*{myfile}"  />
 													</div>
-													<!--                                       <input class="col-sm-12 form-control" type="file" name="pic" accept="image/*">-->
+													<span th:if="${#fields.hasErrors('myfile')}" th:errors="*{myfile}" th:style="'color:red'"></span>	
 												</div>
 												<!-- Button Add to the cart -->
 												<div class="col-sm-12 row form-field hvr-grow">
@@ -417,7 +395,7 @@ $('#search1').on('click', function(evt) {
 
 												<!-- Modal Header -->
 												<div class="modal-header">
-													<h5 class="modal-title">Edit category</h5>
+													<h5 class="modal-title">Add category</h5>
 													<button type="button" class="close" data-dismiss="modal">&times;
 													</button>
 												</div>
@@ -431,7 +409,11 @@ $('#search1').on('click', function(evt) {
 																id="cate-name"
 																placeholder="Enter the New Category Name...">
 														</div>
+												<div class="form-group">
+														
+														<input type="file" name="fileCate" id="fileCate" />
 
+												</div>
 													</form>
 												</div>
 
@@ -481,15 +463,19 @@ $('#search1').on('click', function(evt) {
 
 					}
 				})
-				var nPrice;
-				$("#nPrice").keypress(function(event) {
-					nPrice = $("#nPrice").val();
-				})
+				
+			$("#nPrice").keypress(function(event) {
+				var nPrice = $("#nPrice").val();
 				$("#confirm").attr(
 						"href",
 						"http://localhost:8080/updatePrice?idProduct="
 								+ idProduct + "&nPrice=" + nPrice);
+				})
+				
+			
+			
 			};
+			
 		</script>
 		<!-- script for Modal -->
 		<script type="text/javascript">
@@ -535,9 +521,9 @@ $('#search1').on('click', function(evt) {
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$('#stocks-data-table').DataTable({
-					searching : false,
+					searching : true,
 					lengthChange : false,
-					paging:false
+					paging:false, info:false
 				});
 			});
 		</script>
